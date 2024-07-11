@@ -1,12 +1,14 @@
 import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema({
-    orderItems: { type: [{
-        _id: false,
-        productTitle: { type: String, required: true },
-        productCount: { type: Number, min: 1, required: true },
-        unitCost: { type: Number, min: 1, required: true },
-    }], required: true},
+    orderItems: {
+        type: [{
+            _id: false,
+            productTitle: { type: String, required: true },
+            productCount: { type: Number, min: 1, required: true },
+            unitCost: { type: Number, min: 1, required: true },
+        }], required: true
+    },
     userName: { type: String, required: true },
     convienceFee: { type: Number },
     shippingFee: { type: Number },
@@ -19,10 +21,11 @@ const orderSchema = new mongoose.Schema({
             ID: { type: String, required: true },
             legalName: { tytpe: String },
             expiry: { type: String },
-            cvv: {type: Number},
-    } },
+            cvv: { type: Number },
+        }
+    },
     transactionID: { type: String, required: true }
-}, {timestamps: true});
+}, { timestamps: true });
 
 const Order = mongoose.model("order", orderSchema);
 

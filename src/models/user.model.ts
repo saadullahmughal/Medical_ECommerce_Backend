@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema(
         mobile: { type: String },
         nic: { type: String },
         gender: { type: String, enum: ["Male", "Female", "Other"] },
-        image: {type: String}
+        image: { type: String }
     },
     { timestamps: true }
 );

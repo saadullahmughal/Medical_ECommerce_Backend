@@ -6,8 +6,8 @@ export const validate = (schema: Joi.Schema) => (req: express.Request, res: expr
     try {
         const schemaObject = Joi.compile(schema)
         //console.log("Validating")
-        const validationResults = schemaObject.validate(req, {allowUnknown: true})
-        if(validationResults.error) throw validationResults.error
+        const validationResults = schemaObject.validate(req, { allowUnknown: true })
+        if (validationResults.error) throw validationResults.error
         next()
     } catch (error) {
         res.status(httpStatus.BAD_REQUEST).send(error?.toString())

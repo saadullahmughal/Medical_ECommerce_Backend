@@ -1,12 +1,12 @@
 import httpStatus from "http-status";
-import {logInService,  logOutService, resetPasswordService, refreshTokenService, forgotPasswordService, signUpService} from "../services/auth.service";
+import { logInService, logOutService, resetPasswordService, refreshTokenService, forgotPasswordService, signUpService } from "../services/auth.service";
 import express from "express";
 import RefreshTokens from "../models/refreshToken.model";
 
 
 export const signUp = async (req: express.Request, res: express.Response) => {
-    const {userName,email,password}= req.body
-    const query = {userName:  userName ? userName.toString(): "", password: password ? password.toString(): "", email: email ? email.toString(): ""};
+    const { userName, email, password } = req.body
+    const query = { userName: userName ? userName.toString() : "", password: password ? password.toString() : "", email: email ? email.toString() : "" };
     const response = await signUpService(query);
     if (response) {
         res.status(httpStatus.CREATED).send({
@@ -66,7 +66,7 @@ export const forgotPassword = async (req: express.Request, res: express.Response
 
 
 export const resetPassword = async (req: express.Request, res: express.Response) => {
-    
+
     const token = req.body?.token;
     const password = req.body?.password;
     const query = { token: token ? token.toString() : "", password: password ? password.toString() : "" };
@@ -85,7 +85,7 @@ export const refreshToken = async (req: express.Request, res: express.Response) 
     const token = req?.body?.["token"];
     console.log(token);
     const response = await refreshTokenService(token);
-    if (response.access != "" && response.refresh!="") {
+    if (response.access != "" && response.refresh != "") {
         res.status(httpStatus.OK).send(response);
     } else {
         res.status(httpStatus.EXPECTATION_FAILED).send("Failed");

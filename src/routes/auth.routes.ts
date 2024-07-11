@@ -10,7 +10,7 @@ router.post("/signUp", validate(signUpReqBody), signUp);
 
 router.post("/logIn", validate(logInReqBody), logIn);
 
-router.post("/logOut",auth,  validate(logOutReqBody), logOut);
+router.post("/logOut", auth, validate(logOutReqBody), logOut);
 
 router.post("/forgotPassword", validate(forgotPasswordReqBody), forgotPassword);
 router.post("/resetPassword", validate(resetPasswordReqBody), resetPassword);

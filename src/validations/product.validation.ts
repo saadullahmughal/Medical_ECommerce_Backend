@@ -68,6 +68,6 @@ export const updateProductReq = Joi.object({
 export const addStockReq = Joi.object({
     body: {
         title: Joi.string().required(),
-        quantity: Joi.number().integer().min(1)
+        quantity: Joi.number().integer().min(1).required()
     }
 })

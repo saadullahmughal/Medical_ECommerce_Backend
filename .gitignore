@@ -5,3 +5,5 @@ rough.yml
 src/utils/cipher.*
 build
 images
+src/test*.ts
+src/test*.js

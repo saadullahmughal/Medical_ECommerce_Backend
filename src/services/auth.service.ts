@@ -130,7 +130,7 @@ export const refreshTokenService = async (token: string) => {
         access: "",
         refresh: "",
     };
-    
+
     let tokenPayload = jwt.decode(token) as any;
     //console.log(tokenPayload);
     if (!tokenPayload?.uid) return {
@@ -139,7 +139,7 @@ export const refreshTokenService = async (token: string) => {
     };
     //console.log("Valid Token");
     const tokenFound = await RefreshTokens.findOne({ token: token });
-    if(!tokenFound)return {
+    if (!tokenFound) return {
         access: "",
         refresh: "",
     };

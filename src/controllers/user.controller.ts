@@ -22,7 +22,7 @@ export const ChangePassword = async (req: express.Request, res: express.Response
         res.status(EXPECTATION_FAILED).send("Failed to change the password");
     } else {
         res.status(CREATED).send("Password changed successfully")
-    }    
+    }
 }
 
 export const updateUser = async (req: express.Request, res: express.Response) => {
@@ -42,7 +42,7 @@ export const changePasswordOrEmail = async (req: express.Request, res: express.R
     const userName = getStoredUserData(req)?.userName
     const { newEmail, oldPassword, newPassword } = req.body
     let response
-    if(!newEmail)
+    if (!newEmail)
         response = await changePassword(userName, oldPassword, newPassword)
     else response = await alterEmail(email, newEmail)
     //console.log(response)

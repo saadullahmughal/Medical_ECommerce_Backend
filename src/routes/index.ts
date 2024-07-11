@@ -15,7 +15,7 @@ const defaultRoutes = [
     { path: "/img", route: fileServerRoutes },
     { path: "/form", route: userDataFormRoutes },
     { path: "/product", route: productRoutes },
-    {path: "/pay", route: paymentRoutes}
+    { path: "/pay", route: paymentRoutes }
 ];
 const devRoutes = [{ path: "/", route: docsRoute }];
 

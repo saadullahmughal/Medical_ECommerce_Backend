@@ -1,6 +1,6 @@
 import fs from "fs";
 
-const dirBaseAddr = "D:/Devminified/Node/Proj2/images/";
+const dirBaseAddr = "D:/Devminified/Node/Medical_ECommerce_Backend/images/";
 
 
 export const getImgAddress = (img: string) => {

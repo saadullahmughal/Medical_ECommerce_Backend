@@ -45,9 +45,9 @@ export const alterEmail = async (oldEmail: string, newEmail: string) => {
     const session = await mongoose.startSession()
     session.startTransaction()
     try {
-        let updated = await User.updateOne({ email: oldEmail }, { email: newEmail }, {session}).exec();
+        let updated = await User.updateOne({ email: oldEmail }, { email: newEmail }, { session }).exec();
         if (updated.matchedCount == 0) throw new Error("Something went wrong")
-        updated = await FormData.updateOne({email: oldEmail}, {email: newEmail}, {session}).exec()
+        updated = await FormData.updateOne({ email: oldEmail }, { email: newEmail }, { session }).exec()
         if (updated.matchedCount == 0) throw new Error("Something went wrong")
         await session.commitTransaction()
         await session.endSession()

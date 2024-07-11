@@ -14,15 +14,15 @@ export const processPayment = async (orderData: Record<string, any>) => {
     try {
         const orderItems = orderData?.orderItems as [Record<string, any>];
         for (const item of orderItems) {
-            const result = await Product.updateOne({ title: item.productTitle, quantity: { $gte: item.productCount } }, { $inc: { quantity: -(item.productCount) } }, {session})
+            const result = await Product.updateOne({ title: item.productTitle, quantity: { $gte: item.productCount } }, { $inc: { quantity: -(item.productCount) } }, { session })
             if (result.modifiedCount == 0) {
                 await session.abortTransaction();
                 await session.endSession();
                 return false;
-                
+
             }
         }
-        const response = await Order.create(orderData, {session});
+        const response = await Order.create(orderData, { session });
         console.log("There");
         if (!response) {
             await session.abortTransaction();

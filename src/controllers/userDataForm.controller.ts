@@ -1,8 +1,6 @@
 import httpStatus from "http-status";
 import express from "express";
 import { submitFormService } from "../services/userDataForm.service";
-import { MongoServerError } from "mongodb";
-import { MongooseError } from "mongoose";
 
 export const submitForm = async (req: express.Request, res: express.Response) => {
     const formData = req.body;
