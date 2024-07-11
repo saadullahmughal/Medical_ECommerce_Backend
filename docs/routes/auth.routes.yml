@@ -1,0 +1,221 @@
+tags:
+    name: Authorization
+    description: User Authorization APIs
+
+/signUp:
+    post:
+        summary: Signup and create a new user
+        tags: [Authorization]
+        requestBody:
+            required: true
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/User"
+
+        responses:
+            "201":
+                description: User created
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                status:
+                                    type: string
+                                    example: OK
+                                user:
+                                    type: string
+                                    example: Saadullah
+            "417":
+                description: Failed to create the user
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                status:
+                                    type: string
+                                    example: Failed
+                                user:
+                                    type: string
+                                    example: Saadullah
+
+/logIn:
+    post:
+        summary: LogIn to the system
+        tags: [Authorization]
+        requestBody:
+            required: true
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            userName:
+                                type: string
+                            password:
+                                type: string
+                        required:
+                            - userName
+                            - password
+                        example:
+                            userName: Saadullah
+                            password: P@$$w0rd
+
+        responses:
+            "200":
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                access:
+                                    type: string
+                                    description: Access token
+                                refresh:
+                                    type: string
+                                    description: Refresh token
+
+            "417":
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: Failed
+/logOut:
+    post:
+        summary: LogOut
+        tags: [Authorization]
+        security:
+            - bearerAuth: []
+        requestBody:
+            required: true
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            token:
+                                type: string
+                                description: The refresh token
+        responses:
+            "200":
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: "Logged-Out"
+            "417":
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: "Failed"
+            "401":
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: "Unauthorized"
+/forgotPassword:
+    post:
+        summary: Ask for a reset link if you forgot your password
+        tags: [Authorization]
+        requestBody:
+            required: true
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            email:
+                                type: string
+                                example: email@provider.co
+                        required:
+                            - email
+        responses:
+            "201":
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: Mail with reset token sent.
+            "417":
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: Something went wrong
+
+/resetPassword:
+    post:
+        summary: Reset the password using a requested token received via email
+        tags: [Authorization]
+        requestBody:
+            required: true
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            token:
+                                type: string
+                                example: 84q98wdhjkshfafoahfa
+                            password:
+                                type: string
+                                example: P@$$w0rd
+                        required:
+                            - token
+                            - password
+        responses:
+            "201":
+                content:
+                    plain/text:
+                        schema:
+                            type: string
+                            example: Password reset.
+            "417":
+                content:
+                    plain/text:
+                        schema:
+                            type: string
+                            example: Something went wrong.
+/refreshToken:
+    post:
+        summary: Regenerate the access and refresh tokens if access token get expired. Old refresh token will get expired
+        tags: [Authorization]
+        requestBody:
+            required: true
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            token:
+                                type: string
+                                description: Refresh token
+                        required:
+                            - token
+        responses:
+            "200":
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                access:
+                                    type: string
+                                    description: Access token
+                                refresh:
+                                    type: string
+                                    description: Refresh token
+                            required:
+                                - access
+                                - refresh
+            "417":
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: Failed
