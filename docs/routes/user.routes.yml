@@ -1,0 +1,65 @@
+tags:
+    name: User Info
+    description: User Information Management and Retrieval
+
+/User:
+    get:
+        summary: Get the data of current logged-in user
+        tags: [User Info]
+        security:
+            - bearerAuth: []
+        responses:
+            "200":
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                userName:
+                                    type: string
+                                    description: Unique username
+                                email:
+                                    type: string
+                                    description: Unique email
+                                mobile:
+                                    type: string
+                                    description: The mobile phone number
+                                nic:
+                                    type: string
+                                    description: National ID Card number
+                                gender:
+                                    type: string
+                                    enum: ["Male", "Female", "Other"]
+                                    description: Gender of the user
+                                dateOfBirth:
+                                    type: JS Date
+                                    description: User's Date of Birth
+                                image:
+                                    type: string
+                                    description: The address to user profile pic
+                            example:
+                                userName: Saadullah
+                                email: saadullahmughal4@gmail.com
+                                gender: Male
+                                dateOfBirth: 12/11/2023
+                                nic: 10101-01010101-0
+                                mobile: 0300-0000000
+                                image: 748208209.png
+    put:
+        summary: Update the data of current user
+        tags: [User Info]
+        security:
+            - bearerAuth: []
+        requestBody:
+            required: true
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/User"
+        responses:
+            "201":
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example:

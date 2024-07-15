@@ -3,168 +3,151 @@ import mongoose from "mongoose";
 import User from "../models/user.model";
 import bcrypt from "bcrypt";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { genToken, verifyToken } from "../utils/token";
+import { genToken, getTokenData, verifyToken } from "../utils/token";
 import RefreshTokens from "../models/refreshToken.model";
 import { sendResetLink } from "./email.service";
+import FormData from "../models/form.model";
+import { MongoError, MongoServerError } from "mongodb";
+import { parseMongoError } from "../utils/errorParser";
 require("dotenv").config();
 
 const saltRounds = 12;
 const salt = process.env?.BCRYPT_SALT || "";
 
-const adminExists = async (email: String) => {
-    let r = await User.findOne({ email: email });
-    return r != null;
-};
-
 export const genHash = (text: string) => bcrypt.hashSync(text, salt);
 
 export const signUpService = async (reqBody: Record<string, any>) => {
-    if (!reqBody?.userName || !reqBody?.email || !reqBody?.password) {
-        return false;
+    try {
+        let record = {
+            ...reqBody,
+            password: bcrypt.hashSync(reqBody?.password, salt),
+        };
+        const result = await User.create(record)
+        return { done: true }
+    } catch (error) {
+        return { done: false, message: parseMongoError(error) }
     }
-    let record = {
-        userName: reqBody?.userName,
-        password: bcrypt.hashSync(reqBody?.password, salt),
-        email: reqBody?.email,
-    };
-    return User.create(record)
-        .then((result) => {
-            return true;
-        })
-        .catch((err) => {
-            console.error(err);
-            return false;
-        });
 };
 
 export const logInService = async (reqBody: Record<string, any>) => {
-    if (!reqBody?.userName || !reqBody?.password) {
-        return {
-            access: "",
-            refresh: "",
+    try {
+        let record = {
+            password: bcrypt.hashSync(reqBody?.password, salt),
+            userName: reqBody?.userName,
         };
+        const userFound = await User.findOne(record)
+        if (!userFound) return { done: false, reason: "Invalid credentials" }
+        const tokenPayload = {
+            ...userFound.toObject(),
+        } as Record<string, any>
+        delete tokenPayload["password"]
+        let refreshToken = genToken(
+            { uid: tokenPayload?.userName },
+            "300d"
+        )
+        await RefreshTokens.create({ token: refreshToken })
+        let token = genToken(tokenPayload, 3600)?.toString();
+        return { done: true, access: token || "", refresh: refreshToken || "" }
+    } catch (error) {
+        return { done: false, message: parseMongoError(error) }
     }
-    let record = {
-        password: bcrypt.hashSync(reqBody?.password, salt),
-        userName: reqBody?.userName,
-    };
-    return User.findOne(record)
-        .then((result) => {
-            if (!result) return {
-                access: "",
-                refresh: "",
-            };
-            const tokenPayload = {
-                ...result.toObject(),
-            };
-            let refreshToken = genToken(
-                { uid: tokenPayload?.userName },
-                "300d"
-            );
-            return RefreshTokens.create({ token: refreshToken }).then(
-                (value) => {
-                    let token = genToken(tokenPayload, 3600)?.toString();
-                    return { access: token?.toString(), refresh: refreshToken?.toString() };
-                }
-            );
-        })
-        .catch((err) => {
-            console.error(err);
-            return {
-                access: "",
-                refresh: "",
-            };
-        });
-};
+}
+
 
 export const logOutService = async (token: string) => {
-    if (!verifyToken(token)) return true;
-    return RefreshTokens.deleteOne({ token: token })
-        .then((resolve) => {
-            return true;
-        })
-        .catch((error) => {
-            console.error(error);
-            return false;
-        });
+    try {
+        const deleteResults = await RefreshTokens.deleteOne({ token: token })
+        if (deleteResults.deletedCount != 0)
+            return { done: true }
+        else return { done: false, message: "Invalid Request" }
+    } catch (error) {
+        return { done: false, message: parseMongoError(error) }
+    }
 };
 
-export const forgotPasswordService = async (reqBody: { email: string; }) => {
-    //console.log(reqBody);
-    if (!reqBody?.email) return false;
-    let exists = await adminExists(reqBody?.email);
-    //console.log(email, exists);
-    if (!exists) return false;
-    else
-        return sendResetLink(reqBody?.email)
-            .then((result) => {
-                return result;
-            })
-            .catch((error) => {
-                return false;
-            });
+export const forgotPasswordService = async (reqBody: Record<string, any>) => {
+    try {
+        const user = await User.findOne({ userName: reqBody?.userName })
+        if (!user) return { done: false, message: "No such user exists" }
+        else {
+            const result = await sendResetLink(user?.email)
+            return { done: true }
+        }
+    } catch (error) {
+        return { done: false, message: parseMongoError(error) }
+    }
 };
 
-export const resetPasswordService = async (reqBody: { token: string; password: string; }) => {
-    if (!reqBody?.token && !reqBody?.password) return false;
-    const token = reqBody?.token;
-    if (!verifyToken(token)) return false;
-    const payload = jwt.decode(token) as JwtPayload;
-    const passHash = bcrypt.hashSync(reqBody?.password, salt);
-    return User.findOneAndUpdate(
-        { email: payload?.id },
-        { $set: { password: passHash } }
-    )
-        .then((value) => {
-            console.log(true);
-            return true;
-        })
-        .catch((error) => {
-            console.error(error);
-            return false;
-        });
+export const resetPasswordService = async (reqBody: Record<string, any>) => {
+    try {
+        const { token, password } = reqBody
+        if (!verifyToken(token)) return { done: false, message: "Invalid token" }
+        const payload = getTokenData(token)
+        const passHash = genHash(password);
+        const updateResults = await User.updateOne(
+            { email: payload?.id },
+            { $set: { password: passHash } }
+        )
+        if (updateResults.matchedCount != 0) return { done: true }
+        else return { done: false, message: "Invalid token" }
+    } catch (error) {
+        return { done: false, reason: parseMongoError(error) }
+    }
 };
 
 export const refreshTokenService = async (token: string) => {
-    if (!verifyToken(token)) return {
-        access: "",
-        refresh: "",
-    };
-
-    let tokenPayload = jwt.decode(token) as any;
-    //console.log(tokenPayload);
-    if (!tokenPayload?.uid) return {
-        access: "",
-        refresh: "",
-    };
-    //console.log("Valid Token");
-    const tokenFound = await RefreshTokens.findOne({ token: token });
-    if (!tokenFound) return {
-        access: "",
-        refresh: "",
-    };
-    //console.log("Token found in DB");
-    //console.log("Token payload: ", tokenPayload);
-    let userName = tokenPayload?.uid;
-    //console.log(userName);
-    const userFound = await User.findOne({ userName: userName });
-    if (userFound) {
-        //console.log("User found");
-        //console.log("User: ", userFound.toObject());
-        let newTokenPayload = { ...userFound?.toObject() };
-        let newRefreshToken = genToken(
-            { uid: newTokenPayload?.email },
-            "300d"
-        );
-        await RefreshTokens.findOneAndUpdate({ token: token }, { token: newRefreshToken });
-        let newAccessToken = genToken(newTokenPayload, 120);
-        return { access: newAccessToken, refresh: newRefreshToken };
-    } else {
-        //console.log(userFound);
-        return {
-            access: "",
-            refresh: "",
-        };
+    try {
+        if (!verifyToken(token)) return { done: false, message: "Invalid token" }
+        let tokenPayload = getTokenData(token)
+        if (!tokenPayload?.uid) return { done: false, message: "Invalid token" }
+        const tokenFound = await RefreshTokens.findOne({ token: token });
+        if (!tokenFound) return { done: false, message: "Invalid token" }
+        let userName = tokenPayload?.uid;
+        const userFound = await User.findOne({ userName: userName });
+        if (userFound) {
+            let newTokenPayload = { ...userFound?.toObject() }
+            let newRefreshToken = genToken(
+                { uid: newTokenPayload?.email },
+                "300d"
+            );
+            await RefreshTokens.findOneAndUpdate({ token: token }, { token: newRefreshToken })
+            let newAccessToken = genToken(newTokenPayload, 120);
+            return { done: true, access: newAccessToken, refresh: newRefreshToken }
+        } else {
+            return { done: false, message: "Invalid token" }
+        }
+    } catch (error) {
+        return { done: false, message: parseMongoError(error) }
     }
 };
 
+
+export const changePassword = async (userName: string, oldPassword: string, newPassword: string) => {
+    try {
+        const updated = await User.updateOne({ userName: userName, password: genHash(oldPassword) }, { password: genHash(newPassword) }).exec();
+        if (updated.matchedCount == 0) return { done: false, message: "Something went wrong" }
+        else return { done: true }
+    } catch (error) {
+        console.error(error)
+        return { done: false, message: parseMongoError(error) }
+    }
+}
+
+export const alterEmail = async (oldEmail: string, newEmail: string) => {
+    const session = await mongoose.startSession()
+    session.startTransaction()
+    try {
+        let updated = await User.updateOne({ email: oldEmail }, { email: newEmail }, { session }).exec();
+        if (updated.matchedCount == 0) throw new Error("Something went wrong")
+        updated = await FormData.updateOne({ email: oldEmail }, { email: newEmail }, { session }).exec()
+        if (updated.matchedCount == 0) throw new Error("Something went wrong")
+        await session.commitTransaction()
+        await session.endSession()
+        return { done: true }
+    } catch (error) {
+        console.error(error)
+        await session.abortTransaction()
+        await session.endSession()
+        return { done: false, message: parseMongoError(error) }
+    }
+}

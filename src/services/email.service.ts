@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import { genToken } from "../utils/token";
+import { parseMongoError } from "../utils/errorParser";
 require("dotenv").config();
 
 const emailPassword = process.env?.EMAIL_PASSWORD;
@@ -22,13 +23,12 @@ export const verifyConnection = async () => {
     try {
         return transporter.verify();
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return false;
     }
 };
 
 export const sendResetLink = async (receipt: string) => {
-    //console.log("SendLink");
     if (!verifyConnection()) return false;
     let expires = Date.now() + 15 * 60;
     const ResetToken = genToken({ id: receipt }, "15min");
@@ -42,15 +42,11 @@ export const sendResetLink = async (receipt: string) => {
             "</b> <br>If you didn't ask for such a token, please ignore the mail and don't share the token. Token will expire in 15 minutes.",
     };
     try {
-        //console.log("Sending mail");
-
         const results = await transporter.sendMail(message);
-        //console.log("Sent mail");
-        // console.log(results);
-        return true;
+        return { done: true };
     } catch (error) {
-        console.error(error);
-        return false;
+        console.error(error)
+        return { done: false, message: parseMongoError(error) }
     }
 };
 

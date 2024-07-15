@@ -1,27 +1,17 @@
 import express from "express";
-import { alterEmail, changePassword, getUserData, updateUserData } from "../services/user.service";
-import { CREATED, EXPECTATION_FAILED, OK } from "http-status";
+import { getUserData, updateUserData } from "../services/user.service";
+import httpStatus, { CREATED, EXPECTATION_FAILED, OK } from "http-status";
 import { getStoredUserData } from "../middlewares/auth";
+import { UploadedFile } from "express-fileupload";
+import { saveImage } from "../services/fileServer.service";
 
 export const getUser = async (req: express.Request, res: express.Response) => {
     const userName = getStoredUserData(req)?.userName;
     const response = await getUserData(userName);
-    if (!response) {
-        res.status(EXPECTATION_FAILED).send("Failed to fetch");
+    if (!response.done) {
+        res.status(EXPECTATION_FAILED).send(response);
     } else {
         res.status(OK).send(response)
-    }
-}
-
-export const ChangePassword = async (req: express.Request, res: express.Response) => {
-    const { oldPassword, newPassword } = req.body
-    const userName = getStoredUserData(req)?.userName
-    const response = await changePassword(userName, oldPassword, newPassword)
-    //console.log(response)
-    if (!response) {
-        res.status(EXPECTATION_FAILED).send("Failed to change the password");
-    } else {
-        res.status(CREATED).send("Password changed successfully")
     }
 }
 
@@ -29,27 +19,27 @@ export const updateUser = async (req: express.Request, res: express.Response) =>
     const userName = getStoredUserData(req)?.userName
     const userData = req.body
     const response = await updateUserData(userName, userData)
-    //console.log(response)
-    if (!response) {
-        res.status(EXPECTATION_FAILED).send("Failed to update");
+    if (response.done) {
+        res.status(CREATED).send({ ...response, message: "Data updated" })
     } else {
-        res.status(CREATED).send("Data updated")
+        res.status(EXPECTATION_FAILED).send(response)
     }
 }
 
-export const changePasswordOrEmail = async (req: express.Request, res: express.Response) => {
-    const email = getStoredUserData(req)?.email
+export const addProfilePic = async (req: express.Request, res: express.Response) => {
     const userName = getStoredUserData(req)?.userName
-    const { newEmail, oldPassword, newPassword } = req.body
-    let response
-    if (!newEmail)
-        response = await changePassword(userName, oldPassword, newPassword)
-    else response = await alterEmail(email, newEmail)
-    //console.log(response)
-    if (!response) {
-        res.status(EXPECTATION_FAILED).send("Failed to change");
-    } else {
-        res.status(CREATED).send("Data updated")
+    const image = req.files?.image as UploadedFile
+    let savedName = ""
+    if (!image) res.status(httpStatus.BAD_REQUEST).send("No profile image uploaded")
+    else {
+        const imgDirPath = "images"
+        const result = await saveImage(image, imgDirPath)
+        savedName = result.savedName
+        const response = await updateUserData(userName, { image: savedName })
+        if (response.done) {
+            res.status(httpStatus.OK).send(response)
+        } else {
+            res.status(httpStatus.EXPECTATION_FAILED).send(response)
+        }
     }
-
 }

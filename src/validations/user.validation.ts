@@ -3,7 +3,7 @@ import Joi from "joi";
 export const updateUserReqBody = Joi.object({
     body: Joi.object({
         password: Joi.forbidden(),
-        email: Joi.string().email(),
+        email: Joi.forbidden(),
         nic: Joi.string(),
         mobile: Joi.string(),
         gender: Joi.string().valid("Male", "Female", "Other"),
@@ -18,4 +18,10 @@ export const changePasswordOrEmailReqBody = Joi.object({
         oldPassword: Joi.string().required(),
         newPassword: Joi.string().required()
     }))
+})
+
+export const addProfilePicReq = Joi.object({
+    files: {
+        image: Joi.required()
+    }
 })

@@ -7,7 +7,7 @@ const imgUploadField = "image"
 const router = express.Router();
 
 
-router.get("/:img", auth, getImg);
-router.post("/", auth, postImg);
+router.get("/:img", auth(), getImg);
+router.post("/", auth("admin"), postImg);
 
 export default router;

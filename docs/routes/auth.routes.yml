@@ -185,6 +185,8 @@ tags:
     post:
         summary: Regenerate the access and refresh tokens if access token get expired. Old refresh token will get expired
         tags: [Authorization]
+        security:
+            - bearerAuth: []
         requestBody:
             required: true
             content:
@@ -219,3 +221,50 @@ tags:
                         schema:
                             type: string
                             example: Failed
+/modifyAuth:
+    patch:
+        summary: Update the primary email or email. Both are auth credentials. Try changing request media type to see both schemas
+        tags: [Authorization]
+        security:
+            - bearerAuth: []
+        requestBody:
+            required: true
+            content:
+                application/email+json:
+                    schema:
+                        description: Schema to change the email
+                        type: object
+                        properties:
+                            newEmail:
+                                type: string
+                                format: email
+                                example: saad@dev.pk
+                        required:
+                            - newEmail
+                application/password+json:
+                    schema:
+                        description: Schema to change the password
+                        type: object
+                        properties:
+                            oldPassword:
+                                type: string
+                                example: P@ssword
+                            newPassword:
+                                type: string
+                                example: P@ssword
+                        required:
+                            - oldPassword
+                            - newPassword
+        responses:
+            "201":
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: Data updated
+            "417":
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: Failed to change

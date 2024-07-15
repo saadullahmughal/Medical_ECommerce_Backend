@@ -5,20 +5,22 @@ import {
     updateProduct,
     addProductReview,
     getProductsS,
-    addStock
+    addStock,
+    delProduct
 } from "../controllers/product.controller";
 import { auth } from "../middlewares/auth";
 import { validate } from "../middlewares/validate";
-import { addProductReq, addReviewReq, addStockReq, getFilteredProductsReq, updateProductReq } from "../validations/product.validation";
+import { addProductReq, addReviewReq, addStockReq, delProductReq, getFilteredProductsReq, updateProductReq } from "../validations/product.validation";
 
 const router = Router();
 
-router.get("/:productName", auth, getProductInfo);
-router.post("/", auth, validate(addProductReq), addProduct);
-router.put("/", auth, validate(updateProductReq), updateProduct);
-router.post("/review", auth, validate(addReviewReq), addProductReview);
-router.post("/get", auth, validate(getFilteredProductsReq), getProductsS);
-router.patch("/addStock", auth, validate(addStockReq), addStock)
+router.get("/:productName", auth(), getProductInfo);
+router.post("/", auth("admin"), validate(addProductReq), addProduct)
+router.put("/", auth("admin"), validate(updateProductReq), updateProduct)
+router.post("/review", auth(), validate(addReviewReq), addProductReview)
+router.post("/get", auth(), validate(getFilteredProductsReq), getProductsS)
+router.patch("/addStock", auth("admin"), validate(addStockReq), addStock)
+router.delete("/", auth("admin"), validate(delProductReq), delProduct)
 
 export default router;
 

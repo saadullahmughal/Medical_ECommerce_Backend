@@ -1,6 +1,6 @@
 tags:
     name: Products
-    description: Product retrieval
+    description: Product retrieval and management
 
 /product/{productName}:
     get:
@@ -132,19 +132,12 @@ tags:
                             type: string
                             example: Unauthorized
 
-    patch:
+/product:
+    put:
         summary: Update an existing product
         tags: [Products]
         security:
             - bearerAuth: []
-        parameters:
-            - in: path
-              name: title
-              required: true
-              schema:
-                  type: string
-                  example: Organic Carrots
-              description: Title of the product to be updated
         requestBody:
             description: The data of a product to be modified
             required: true
@@ -170,8 +163,6 @@ tags:
                         schema:
                             type: string
                             example: "Unauthorized"
-
-/product:
     post:
         summary: Add a new product
         tags: [Products]
@@ -214,7 +205,25 @@ tags:
             content:
                 application/json:
                     schema:
-                        $ref: "#/components/schemas/Review"
+                        type: object
+                        properties:
+                            productTitle:
+                                type: string
+                                description: The product being reviewed
+                            rating:
+                                type: number
+                                description: The rating (stars) by user out of 5
+                            reviewText:
+                                type: string
+                                description: The main body of review
+                        required:
+                            - productTitle
+                            - rating
+                            - reviewText
+                        example:
+                            productTitle: Organic Carrots
+                            rating: 4
+                            reviewText: Very good item
         responses:
             "201":
                 content:
@@ -234,3 +243,97 @@ tags:
                         schema:
                             type: string
                             example: "Unauthorized"
+/product/get:
+    post:
+        summary: Get specific number of products meeting given criteria
+        tags: [Products]
+        security:
+            - bearerAuth: []
+        parameters:
+            - in: query
+              name: maxNumber
+              type: number
+              example: 2
+              required: true
+              description: Max numbers of products to return
+        requestBody:
+            required: true
+            description: Filters to be applied
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            searchText:
+                                type: string
+                            onSales:
+                                type: boolean
+                            type:
+                                type: string
+                            newArrivals:
+                                type: boolean
+                            minPrice:
+                                type: number
+                                min: 0
+                            maxPrice:
+                                type: number
+                                min: 0
+                            dietNeeds:
+                                type: array
+                                items:
+                                    type: string
+                            allergenFilters:
+                                type: array
+                                items:
+                                    type: string
+                        example:
+                            searchText: carrot
+                            onSales: true
+        responses:
+            "200":
+                content:
+                    application/json:
+                        schema:
+                            type: array
+                            items:
+                                type: object
+                                $ref: "#/components/schemas/ProductSnap"
+            "417":
+                content:
+
+/product/addStock:
+    patch:
+        summary: Add some stock and increase the quantity
+        tags: [Products]
+        security:
+            - bearerAuth: []
+        requestBody:
+            required: true
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            title:
+                                type: string
+                            quantity:
+                                type: number
+                        required:
+                            - title
+                            - quantity
+                        example:
+                            title: Organic Carrots
+                            quantity: 50
+        responses:
+            "200":
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: Added successfully
+            "417":
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: "Failed to add"

@@ -1,5 +1,5 @@
 import { query } from "express";
-import Joi, { ref } from "joi";
+import Joi from "joi";
 
 export const getFilteredProductsReq = Joi.object({
     query: {
@@ -29,7 +29,7 @@ export const addProductReq = Joi.object({
     body: {
         title: Joi.string().required(),
         description: Joi.string(),
-        price: Joi.number().integer().min(0),
+        price: Joi.number().integer().min(0).required(),
         productType: Joi.string(),
         deliveryTime: Joi.string(),
         quantity: Joi.number().integer().min(0).required(),
@@ -69,5 +69,11 @@ export const addStockReq = Joi.object({
     body: {
         title: Joi.string().required(),
         quantity: Joi.number().integer().min(1).required()
+    }
+})
+
+export const delProductReq = Joi.object({
+    query: {
+        productName: Joi.string().required()
     }
 })

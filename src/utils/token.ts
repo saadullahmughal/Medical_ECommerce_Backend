@@ -16,16 +16,17 @@ export const genToken = function (payload: object, expires: string | number | un
 export const getTokenData = (token: string) => {
     try {
         let payload = verify(token, tokenSign)
-        console.log(payload)
+        //console.log(payload)
         return payload as JwtPayload
     } catch (error) {
         return {}
     }
 }
 
-export const verifyToken = function (token: string): boolean {
+export const verifyToken = function (token: string, ignoreExpiry?: boolean): boolean {
     try {
-        let payload = verify(token, tokenSign);
+        //if (!ignoreExpiry) ignoreExpiry = false;
+        let payload = verify(token, tokenSign, { ignoreExpiration: ignoreExpiry });
         return true;
     } catch (error) {
         return false;
