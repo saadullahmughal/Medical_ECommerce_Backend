@@ -52,7 +52,7 @@ components:
                 - password
                 - email
             example:
-                _id: 451321sdsal;dka;l
+                _id: 451321sdsaldkal
                 firstName: Saadullah
                 lastName: Mughal
                 email: saad@company.org

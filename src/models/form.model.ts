@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"
 
 const formSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
@@ -11,8 +11,8 @@ const formSchema = new mongoose.Schema({
     indicators: { type: String },
     subtype: { type: String },
     startTime: { type: Date },
-});
+})
 
-const FormData = mongoose.model("userData", formSchema);
+const FormData = mongoose.model("userData", formSchema)
 
-export default FormData;
+export default FormData

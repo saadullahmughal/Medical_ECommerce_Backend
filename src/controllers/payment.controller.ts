@@ -1,7 +1,7 @@
-import express from "express";
-import { processPayment } from "../services/payment.service";
-import httpStatus from "http-status";
-import { getStoredUserData } from "../middlewares/auth";
+import express from "express"
+import { processPayment } from "../services/payment.service"
+import httpStatus from "http-status"
+import { getStoredUserData } from "../middlewares/auth"
 
 export const handlePayment = async (req: express.Request, res: express.Response) => {
     const userName = getStoredUserData(req)?.userName

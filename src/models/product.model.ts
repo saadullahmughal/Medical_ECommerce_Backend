@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"
 
 const productSchema = new mongoose.Schema(
     {
@@ -30,15 +30,15 @@ const productSchema = new mongoose.Schema(
         alertMsg: { type: String },
     },
     { timestamps: true }
-);
+)
 
-const Product = mongoose.model("product", productSchema);
+const Product = mongoose.model("product", productSchema)
 
 const testSchema = async () => {
     await mongoose.connect(
         "mongodb+srv://saadullah:saad2003@devminified.hiye9xh.mongodb.net/medicalECommerce?retryWrites=true&w=majority&appName=Devminified"
-    );
-    console.log("Connected");
+    )
+    console.log("Connected")
     await Product.create({
         title: "Organic Carrots",
         price: 50,
@@ -57,10 +57,10 @@ const testSchema = async () => {
         servingSize: "1/2 cup (120g)",
         servingsPerContainer: 3.5,
         alertMsg: "Excess amount can cause overloading of vitamin A",
-    });
-    console.log("Success");
-};
+    })
+    console.log("Success")
+}
 
-//testSchema();
+//testSchema()
 
-export default Product;
+export default Product

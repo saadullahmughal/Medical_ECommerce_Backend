@@ -11,9 +11,33 @@ tags:
             content:
                 application/json:
                     schema:
-                        $ref: "#/components/schemas/User"
-
+                        type: object
+                        required:
+                            - userName
+                            - email
+                            - password
+                        properties:
+                            userName:
+                                type: string
+                                description: Unique username
+                            email:
+                                type: string
+                                description: Unique email
+                            password:
+                                type: string
+                                description: User's password
+                        example:
+                            userName: newUser
+                            email: zafarsaad80@gmail.com
+                            password: "12345678"
         responses:
+            "400":
+                description: Invalid parameters
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: userName (supposed to be in body) is required
             "201":
                 description: User created
                 content:
@@ -21,12 +45,9 @@ tags:
                         schema:
                             type: object
                             properties:
-                                status:
-                                    type: string
-                                    example: OK
-                                user:
-                                    type: string
-                                    example: Saadullah
+                                done:
+                                    type: boolean
+                                    example: true
             "417":
                 description: Failed to create the user
                 content:
@@ -34,12 +55,13 @@ tags:
                         schema:
                             type: object
                             properties:
-                                status:
+                                done:
+                                    type: boolean
+                                    example: false
+                                message:
                                     type: string
-                                    example: Failed
-                                user:
-                                    type: string
-                                    example: Saadullah
+                                    description: A message indicating reason of failure
+                                    example: This userName already exists
 
 /logIn:
     post:
@@ -70,19 +92,40 @@ tags:
                         schema:
                             type: object
                             properties:
+                                done:
+                                    type: boolean
                                 access:
                                     type: string
                                     description: Access token
                                 refresh:
                                     type: string
                                     description: Refresh token
+                            example:
+                                done: true
+                                access: Access token
+                                refresh: Refresh token
 
             "417":
+                description: Failed to login
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: false
+                                message:
+                                    type: string
+                                    description: A message indicating reason of failure
+                                    example: Invalid credentials
+            "400":
+                description: Invalid parameters
                 content:
                     text/plain:
                         schema:
                             type: string
-                            example: Failed
+                            example: userName (supposed to be in body) is required
 /logOut:
     post:
         summary: LogOut
@@ -100,18 +143,37 @@ tags:
                                 type: string
                                 description: The refresh token
         responses:
+            "400":
+                description: Invalid parameters
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: token (supposed to be in body) is required
             "200":
                 content:
-                    text/plain:
+                    application/json:
                         schema:
-                            type: string
-                            example: "Logged-Out"
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                            example:
+                                done: true
             "417":
+                description: Failed to logout
                 content:
-                    text/plain:
+                    application/json:
                         schema:
-                            type: string
-                            example: "Failed"
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: false
+                                message:
+                                    type: string
+                                    description: A message indicating reason of failure
+                                    example: Invalid request
             "401":
                 content:
                     text/plain:
@@ -129,24 +191,43 @@ tags:
                     schema:
                         type: object
                         properties:
-                            email:
+                            userName:
                                 type: string
-                                example: email@provider.co
+                                example: newUser
                         required:
-                            - email
+                            - userName
         responses:
             "201":
                 content:
-                    text/plain:
+                    application/json:
                         schema:
-                            type: string
-                            example: Mail with reset token sent.
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: true
+                                message:
+                                    type: string
+                                    example: Mail with reset token sent.
             "417":
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: false
+                                message:
+                                    type: string
+                                    example: No such user exists
+            "400":
+                description: Invalid parameters
                 content:
                     text/plain:
                         schema:
                             type: string
-                            example: Something went wrong
+                            example: userName (supposed to be in body) is required
 
 /resetPassword:
     post:
@@ -171,16 +252,35 @@ tags:
         responses:
             "201":
                 content:
-                    plain/text:
+                    application/json:
                         schema:
-                            type: string
-                            example: Password reset.
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: true
+                                message:
+                                    type: string
+                                    example: Password reset
             "417":
                 content:
-                    plain/text:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: false
+                                message:
+                                    type: string
+                                    example: Invalid token
+            "400":
+                description: Invalid parameters
+                content:
+                    text/plain:
                         schema:
                             type: string
-                            example: Something went wrong.
+                            example: password (supposed to be in body) is required
 /refreshToken:
     post:
         summary: Regenerate the access and refresh tokens if access token get expired. Old refresh token will get expired
@@ -206,6 +306,9 @@ tags:
                         schema:
                             type: object
                             properties:
+                                done:
+                                    type: boolean
+                                    example: true
                                 access:
                                     type: string
                                     description: Access token
@@ -217,10 +320,23 @@ tags:
                                 - refresh
             "417":
                 content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: false
+                                message:
+                                    type: string
+                                    example: Invalid token
+            "400":
+                description: Invalid parameters
+                content:
                     text/plain:
                         schema:
                             type: string
-                            example: Failed
+                            example: token (supposed to be in body) is required
 /modifyAuth:
     patch:
         summary: Update the primary email or email. Both are auth credentials. Try changing request media type to see both schemas
@@ -258,13 +374,39 @@ tags:
         responses:
             "201":
                 content:
-                    text/plain:
+                    application/json:
                         schema:
-                            type: string
-                            example: Data updated
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: true
+                                message:
+                                    type: string
+                                    example: Credentials changed
             "417":
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: false
+                                message:
+                                    type: string
+                                    example: This email already exists
+            "401":
                 content:
                     text/plain:
                         schema:
                             type: string
-                            example: Failed to change
+                            example: "Unauthorized"
+
+            "400":
+                description: Invalid parameters
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: newEmail (supposed to be in body) is required

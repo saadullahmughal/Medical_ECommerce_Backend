@@ -1,5 +1,5 @@
-import { query } from "express";
-import Joi from "joi";
+import { query } from "express"
+import Joi from "joi"
 
 export const getFilteredProductsReq = Joi.object({
     query: {

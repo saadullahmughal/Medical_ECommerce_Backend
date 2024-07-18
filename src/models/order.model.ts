@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"
 
 const orderSchema = new mongoose.Schema({
     orderItems: {
@@ -25,10 +25,10 @@ const orderSchema = new mongoose.Schema({
         }
     },
     transactionID: { type: String, required: true }
-}, { timestamps: true });
+}, { timestamps: true })
 
-const Order = mongoose.model("order", orderSchema);
+const Order = mongoose.model("order", orderSchema)
 
-//Order.create({userName: "Saadullah", grandTotal: 5000, orderItems: [{productTitle: "Organic Carrots", productCount: 5, unitCost: 50}], paymentAccountInfo: {accountType: "PayPal", ID: "saadullahmughal4@gmail.com"}, transactionID: "uusd0aud9ad80a9" }).then(() => {console.log("Order Added")}).catch((err) => {console.error(err)});
+//Order.create({userName: "Saadullah", grandTotal: 5000, orderItems: [{productTitle: "Organic Carrots", productCount: 5, unitCost: 50}], paymentAccountInfo: {accountType: "PayPal", ID: "saadullahmughal4@gmail.com"}, transactionID: "uusd0aud9ad80a9" }).then(() => {console.log("Order Added")}).catch((err) => {console.error(err)})
 
-export default Order;
+export default Order

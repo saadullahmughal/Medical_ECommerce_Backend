@@ -1,4 +1,4 @@
-import Joi from "joi";
+import Joi from "joi"
 
 export const AuthToken = Joi.compile(Joi.object({
     userName: Joi.string().required(),

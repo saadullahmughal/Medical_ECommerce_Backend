@@ -5,7 +5,7 @@ const myTestObj = {
 
 let x: Record<string, any> = {}
 for (const [key, value] of Object.entries(myTestObj)) {
-    x[key] = value;
+    x[key] = value
 }
-console.log(x);
-console.log(typeof myTestObj, "   ", typeof x);
+console.log(x)
+console.log(typeof myTestObj, "   ", typeof x)

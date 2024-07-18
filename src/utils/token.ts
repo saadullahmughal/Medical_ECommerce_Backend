@@ -1,17 +1,17 @@
-import { JwtPayload, sign, verify } from "jsonwebtoken";
-require("dotenv").config();
+import { JwtPayload, sign, verify } from "jsonwebtoken"
+require("dotenv").config()
 
-const tokenSign = process.env?.JWT_TOKEN_SIGNATURE || "";
+const tokenSign = process.env?.JWT_TOKEN_SIGNATURE || ""
 
 
 export const genToken = function (payload: object, expires: string | number | undefined): string | null {
     try {
-        return sign(payload, tokenSign, { expiresIn: expires });
+        return sign(payload, tokenSign, { expiresIn: expires })
     } catch (error) {
-        console.error(error);
-        return null;
+        console.error(error)
+        return null
     }
-};
+}
 
 export const getTokenData = (token: string) => {
     try {
@@ -25,11 +25,11 @@ export const getTokenData = (token: string) => {
 
 export const verifyToken = function (token: string, ignoreExpiry?: boolean): boolean {
     try {
-        //if (!ignoreExpiry) ignoreExpiry = false;
-        let payload = verify(token, tokenSign, { ignoreExpiration: ignoreExpiry });
-        return true;
+        //if (!ignoreExpiry) ignoreExpiry = false
+        let payload = verify(token, tokenSign, { ignoreExpiration: ignoreExpiry })
+        return true
     } catch (error) {
-        return false;
+        return false
     }
-};
+}
 

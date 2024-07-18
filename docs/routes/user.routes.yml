@@ -15,36 +15,31 @@ tags:
                         schema:
                             type: object
                             properties:
-                                userName:
+                                done:
+                                    type: boolean
+                                    example: true
+                                message:
+                                    $ref: "#/components/schemas/User"
+            "417":
+                description: Failed to fetch the details
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: false
+                                message:
                                     type: string
-                                    description: Unique username
-                                email:
-                                    type: string
-                                    description: Unique email
-                                mobile:
-                                    type: string
-                                    description: The mobile phone number
-                                nic:
-                                    type: string
-                                    description: National ID Card number
-                                gender:
-                                    type: string
-                                    enum: ["Male", "Female", "Other"]
-                                    description: Gender of the user
-                                dateOfBirth:
-                                    type: JS Date
-                                    description: User's Date of Birth
-                                image:
-                                    type: string
-                                    description: The address to user profile pic
-                            example:
-                                userName: Saadullah
-                                email: saadullahmughal4@gmail.com
-                                gender: Male
-                                dateOfBirth: 12/11/2023
-                                nic: 10101-01010101-0
-                                mobile: 0300-0000000
-                                image: 748208209.png
+                                    description: A message indicating reason of failure
+                                    example: Something went wrong
+            "401":
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: "Unauthorized"
     put:
         summary: Update the data of current user
         tags: [User Info]
@@ -55,11 +50,177 @@ tags:
             content:
                 application/json:
                     schema:
-                        $ref: "#/components/schemas/User"
+                        $ref: "#/components/schemas/User2"
         responses:
             "201":
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: true
+                                message:
+                                    type: string
+                                    example: Data updated
+            "417":
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: false
+                                message:
+                                    type: string
+                                    example: Something went wrong
+            "401":
                 content:
                     text/plain:
                         schema:
                             type: string
+                            example: "Unauthorized"
+            "400":
+                description: Invalid parameters
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: Some issue stating invalidity
+    post:
+        summary: Add a profile pic
+        tags: [User Info]
+        security:
+            - bearerAuth: []
+        requestBody:
+            required: true
+            content:
+                multipart/form-data:
+                    schema:
+                        type: object
+                        required:
+                            - image
+                        properties:
+                            image:
+                                type: string
+                                format: binary
+        responses:
+            "400":
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: No profile image uploaded
+            "201":
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                message:
+                                    type: string
                             example:
+                                done: true
+                                message: 4564521.jpg
+            "417":
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                message:
+                                    type: string
+                            example:
+                                done: false
+                                message: Something went wrong
+/form/submitForm:
+    post:
+        summary: Add initial form data related to medical history of user to DB
+        tags: [User Info]
+        requestBody:
+            required: true
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            email:
+                                type: string
+                            age:
+                                type: number
+                                format: integer
+                            referrer:
+                                type: string
+                            gender:
+                                type: string
+                                enum: [Male, Female, Other]
+                            showGender:
+                                type: boolean
+                            location:
+                                type: string
+                            diagnosis:
+                                type: boolean
+                            indicators:
+                                type: string
+                            subType:
+                                type: string
+                            startTime:
+                                type: string
+                        required:
+                            - email
+                        example:
+                            email: old@saad.future
+                            age: 57
+                            gender: Male
+                            showGender: true
+                            location: Gujranwala
+                            diagnosis: true
+                            indicators: Medical Test XYZ
+                            subType: subType ABC
+                            startTime: 2 years
+        responses:
+            "400":
+                description: Invalid parameters
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: email (supposed to be in body) is required
+            "417":
+                description: Failed to fulfil the request
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                message:
+                                    type: string
+                            example:
+                                done: false
+                                message: Something went wrong
+            "200":
+                description: Submitted successfully
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                message:
+                                    type: object
+                                    properties:
+                                        userName:
+                                            type: string
+                            example:
+                                done: true
+                                message:
+                                    userName: UserName

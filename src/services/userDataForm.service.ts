@@ -1,10 +1,10 @@
-import httpStatus from "http-status";
-import mongoose from "mongoose";
-import FormData from "../models/form.model";
-import User from "../models/user.model";
-import moment from "moment";
-import { parseMongoError } from "../utils/errorParser";
-require("dotenv").config();
+import httpStatus from "http-status"
+import mongoose from "mongoose"
+import FormData from "../models/form.model"
+import User from "../models/user.model"
+import moment from "moment"
+import { parseMongoError } from "../utils/errorParser"
+require("dotenv").config()
 
 
 export const submitFormService = async (requestQuery: Record<string, any>) => {
@@ -17,9 +17,9 @@ export const submitFormService = async (requestQuery: Record<string, any>) => {
         let inRecord = {
             ...requestQuery,
             startTime: startTimeDate,
-        };
-        let result = await FormData.create([inRecord], { session });
-        let newResult;
+        }
+        let result = await FormData.create([inRecord], { session })
+        let newResult
         if (result)
             newResult = await User.findOneAndUpdate(
                 { email: requestQuery?.email },
@@ -29,7 +29,7 @@ export const submitFormService = async (requestQuery: Record<string, any>) => {
                         gender: requestQuery?.gender,
                     },
                 }
-                , { session }).exec();
+                , { session }).exec()
         if (newResult) {
             await session.commitTransaction()
             await session.endSession()
@@ -47,5 +47,5 @@ export const submitFormService = async (requestQuery: Record<string, any>) => {
         await session.endSession()
         return { done: false, message: parseMongoError(error) }
     }
-};
+}
 

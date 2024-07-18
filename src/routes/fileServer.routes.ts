@@ -1,13 +1,13 @@
-import express from "express";
-import { getImg, postImg } from "../controllers/fileServer.controller";
-import { auth } from "../middlewares/auth";
-import { validate } from "../middlewares/validate";
+import express from "express"
+import { getImg, postImg } from "../controllers/fileServer.controller"
+import { auth } from "../middlewares/auth"
+import { validate } from "../middlewares/validate"
 const imgUploadField = "image"
 
-const router = express.Router();
+const router = express.Router()
 
 
-router.get("/:img", auth(), getImg);
-router.post("/", auth("admin"), postImg);
+router.get("/:img", auth(), getImg)
+router.post("/", auth("admin"), postImg)
 
-export default router;
+export default router

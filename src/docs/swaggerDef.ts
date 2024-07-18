@@ -1,4 +1,4 @@
-import { version } from "../../package.json";
+import { version } from "../../package.json"
 
 const swaggerDef = {
     openapi: "3.0.0",
@@ -18,6 +18,6 @@ const swaggerDef = {
             url: `http://localhost:5000`,
         },
     ],
-};
+}
 
-export default swaggerDef;
+export default swaggerDef

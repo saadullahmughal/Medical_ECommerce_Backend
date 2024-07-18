@@ -25,105 +25,116 @@ tags:
                         schema:
                             type: object
                             properties:
-                                title:
-                                    type: string
-                                    example: Organic Carrots
-                                price:
-                                    type: number
-                                    example: 50
-                                productType:
-                                    type: string
-                                    example: Vegetables
-                                images:
-                                    type: array
-                                    items:
-                                        type: string
-                                    description: Not implemented yet
-                                defaultImage:
-                                    type: number
-                                    example: 0
-                                    description: Index of default image in images array
-                                ingredients:
-                                    type: array
-                                    items:
-                                        type: string
-                                        example: Carrots
-                                servingPerContainer:
-                                    type: number
-                                    example: 3.5
-                                servingSize:
-                                    type: string
-                                    example: 1/2 cup (120g)
-                                tags:
-                                    type: array
-                                    items:
-                                        type: string
-                                        example: Organic
-                                amountsPerServing:
-                                    type: array
-                                    items:
-                                        type: object
-                                        properties:
-                                            item:
+                                done:
+                                    type: boolean
+                                    example: true
+                                message:
+                                    type: object
+                                    properties:
+                                        title:
+                                            type: string
+                                            example: Organic Carrots
+                                        price:
+                                            type: number
+                                            example: 50
+                                        productType:
+                                            type: string
+                                            example: Vegetables
+                                        images:
+                                            type: array
+                                            items:
                                                 type: string
-                                                example: Total Fat
-                                            value:
+                                            description: Not implemented yet
+                                        defaultImage:
+                                            type: number
+                                            example: 0
+                                            description: Index of default image in images array
+                                        ingredients:
+                                            type: array
+                                            items:
                                                 type: string
-                                                example: 10g
-                                            valuePercent:
-                                                type: number
-                                                example: 12
-                                alertMsg:
-                                    type: string
-                                    example: Excess amount can cause overloading of vitamin A
-                                    description: Something to show bold like allergy notices
-                                orderCount:
-                                    type: number
-                                    example: 250
-                                    description: Number of orders with this product
-                                reviews:
-                                    type: array
-                                    items:
-                                        type: object
-                                        properties:
-                                            userName:
+                                                example: Carrots
+                                        servingPerContainer:
+                                            type: number
+                                            example: 3.5
+                                        servingSize:
+                                            type: string
+                                            example: 1/2 cup (120g)
+                                        tags:
+                                            type: array
+                                            items:
                                                 type: string
-                                                example: James Jones
-                                            rating:
-                                                type: number
-                                                example: 4
-                                            reviewText:
-                                                type: string
-                                                example: Very satisfactory food quality
-                                            reviewDate:
-                                                type: string
-                                                example: 03 July 2024
-                                                description: Review date
+                                                example: Organic
+                                        amountsPerServing:
+                                            type: array
+                                            items:
+                                                type: object
+                                                properties:
+                                                    item:
+                                                        type: string
+                                                        example: Total Fat
+                                                    value:
+                                                        type: string
+                                                        example: 10g
+                                                    valuePercent:
+                                                        type: number
+                                                        example: 12
+                                        alertMsg:
+                                            type: string
+                                            example: Excess amount can cause overloading of vitamin A
+                                            description: Something to show bold like allergy notices
+                                        orderCount:
+                                            type: number
+                                            example: 250
+                                            description: Number of orders with this product
+                                        reviews:
+                                            type: array
+                                            items:
+                                                type: object
+                                                properties:
+                                                    userName:
+                                                        type: string
+                                                        example: James Jones
+                                                    rating:
+                                                        type: number
+                                                        example: 4
+                                                    reviewText:
+                                                        type: string
+                                                        example: Very satisfactory food quality
+                                                    reviewDate:
+                                                        type: string
+                                                        example: 03 July 2024
+                                                        description: Review date
 
-                                reviewCount:
-                                    type: number
-                                    example: 25
-                                    description: Number of review on this product
-                                avgRating:
-                                    type: number
-                                    example: 4.5
-                                    description: Average user rating about this product (Out of 5)
-                                ratingStats:
-                                    type: array
-                                    items:
-                                        type: number
-                                        example: 5
-                                    minItems: 6
-                                    maxItems: 6
-                                    description: Number of reviews classified according to rating (Array index means number of stars)
+                                        reviewCount:
+                                            type: number
+                                            example: 25
+                                            description: Number of review on this product
+                                        avgRating:
+                                            type: number
+                                            example: 4.5
+                                            description: Average user rating about this product (Out of 5)
+                                        ratingStats:
+                                            type: array
+                                            items:
+                                                type: number
+                                                example: 5
+                                            minItems: 6
+                                            maxItems: 6
+                                            description: Number of reviews classified according to rating (Array index means number of stars)
 
             "417":
-                description: Failed to fetch the details (Product may not exist)
                 content:
-                    text/plain:
+                    application/json:
                         schema:
-                            type: string
-                            example: N/A
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: false
+                                message:
+                                    type: string
+                                    example: No such product exists
             "401":
                 description: Unauthorized
                 content:
@@ -135,6 +146,7 @@ tags:
 /product:
     put:
         summary: Update an existing product
+        description: Only admins can update a product
         tags: [Products]
         security:
             - bearerAuth: []
@@ -150,21 +162,48 @@ tags:
                 content:
                     application/json:
                         schema:
-                            $ref: "#/components/schemas/Product"
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: true
+                                message:
+                                    type: string
+                                    example: Updated successfully
             "417":
                 content:
-                    text/plain:
+                    application/json:
                         schema:
-                            type: string
-                            example: Request failed
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: false
+                                message:
+                                    type: string
+                                    example: Something went wrong
             "401":
                 content:
                     text/plain:
                         schema:
                             type: string
                             example: "Unauthorized"
+            "403":
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: "Forbidden"
+            "400":
+                description: Invalid parameters
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: title (supposed to be in body) is required
     post:
         summary: Add a new product
+        description: Only admins can add the products
         tags: [Products]
         security:
             - bearerAuth: []
@@ -180,19 +219,97 @@ tags:
                 content:
                     application/json:
                         schema:
-                            $ref: "#/components/schemas/Product"
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: true
+                                message:
+                                    type: string
+                                    example: Updated successfully
             "417":
                 content:
-                    text/plain:
+                    application/json:
                         schema:
-                            type: string
-                            example: Request failed
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: false
+                                message:
+                                    type: string
+                                    example: Something went wrong
             "401":
                 content:
                     text/plain:
                         schema:
                             type: string
                             example: "Unauthorized"
+            "403":
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: "Forbidden"
+            "400":
+                description: Invalid parameters
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: title (supposed to be in body) is required
+    delete:
+        summary: Delete a product
+        description: Only admins can delete a product
+        tags: [Products]
+        security:
+            - bearerAuth: []
+        parameters:
+            - in: query
+              name: title
+              type: string
+              example: Carrots
+        responses:
+            "200":
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: true
+            "417":
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: false
+                                message:
+                                    type: string
+                                    example: No such product exists
+            "403":
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: "Forbidden"
+            "401":
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: "Unauthorized"
+            "400":
+                description: Invalid parameters
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: title (supposed to be in query) is required
 /product/review:
     post:
         summary: Post a comment or reveiw on the product
@@ -227,22 +344,41 @@ tags:
         responses:
             "201":
                 content:
-                    text/plain:
+                    application/json:
                         schema:
-                            type: string
-                            example: Review Posted
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: true
+                                message:
+                                    type: string
+                                    example: Review Posted
             "417":
                 content:
-                    text/plain:
+                    application/json:
                         schema:
-                            type: string
-                            example: Request failed
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: false
+                                message:
+                                    type: string
+                                    example: No such product exists
             "401":
                 content:
                     text/plain:
                         schema:
                             type: string
                             example: "Unauthorized"
+            "400":
+                description: Invalid parameters
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: reviewText (supposed to be in body) is required
 /product/get:
     post:
         summary: Get specific number of products meeting given criteria
@@ -294,16 +430,45 @@ tags:
                 content:
                     application/json:
                         schema:
-                            type: array
-                            items:
-                                type: object
-                                $ref: "#/components/schemas/ProductSnap"
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: true
+                                message:
+                                    type: array
+                                    items:
+                                        type: object
+                                        $ref: "#/components/schemas/ProductSnap"
             "417":
                 content:
-
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: false
+                                message:
+                                    type: string
+                                    example: Something went wrong
+            "400":
+                description: Invalid parameters
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: onSales (supposed to be in body) is a boolean value
+            "401":
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: "Unauthorized"
 /product/addStock:
     patch:
         summary: Add some stock and increase the quantity
+        description: Only admins can add to stock
         tags: [Products]
         security:
             - bearerAuth: []
@@ -327,13 +492,41 @@ tags:
         responses:
             "200":
                 content:
-                    text/plain:
+                    application/json:
                         schema:
-                            type: string
-                            example: Added successfully
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: true
             "417":
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: false
+                                message:
+                                    type: string
+                                    example: No such product exists
+            "401":
                 content:
                     text/plain:
                         schema:
                             type: string
-                            example: "Failed to add"
+                            example: "Unauthorized"
+            "403":
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: "Forbidden"
+            "400":
+                description: Invalid parameters
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: title (supposed to be in body) is required

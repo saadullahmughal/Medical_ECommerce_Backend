@@ -1,9 +1,9 @@
-import mongoose from "mongoose";
-import app from "./server";
-import { verifyConnection } from "./services/email.service";
-require("dotenv").config();
+import mongoose from "mongoose"
+import app from "./server"
+import { verifyConnection } from "./services/email.service"
+require("dotenv").config()
 
-const uri = process.env.MONGO_URI as string;
+const uri = process.env.MONGO_URI as string
 const PORT = process.env.PORT || 5000
 
 async function start() {
@@ -24,8 +24,8 @@ async function start() {
     }
 }
 
-start();
+start()
 // mongoose.connect(uri).then(() => {
-//     console.log("Connected");
-//     getProductData("Organic Carrots");
-// });
+//     console.log("Connected")
+//     getProductData("Organic Carrots")
+// })
