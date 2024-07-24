@@ -35,19 +35,19 @@ export const logInService = async (reqBody: Record<string, any>) => {
             password: bcrypt.hashSync(reqBody?.password, salt),
             userName: reqBody?.userName,
         }
-        const userFound = await User.findOne(record)
+        const userFound = await User.findOne(record, { createdAt: false, updatedAt: false, password: false, _id: false, __v: false })
         if (!userFound) return { done: false, reason: "Invalid credentials" }
         const tokenPayload = {
             ...userFound.toObject(),
         } as Record<string, any>
-        delete tokenPayload["password"]
+        //delete tokenPayload["password"]
         let refreshToken = genToken(
             { uid: tokenPayload?.userName },
             "300d"
         )
         await RefreshTokens.create({ token: refreshToken })
         let token = genToken(tokenPayload, 3600)?.toString()
-        return { done: true, access: token || "", refresh: refreshToken || "" }
+        return { done: true, userData: tokenPayload, access: token || "", refresh: refreshToken || "" }
     } catch (error) {
         return { done: false, message: parseMongoError(error) }
     }
