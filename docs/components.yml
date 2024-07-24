@@ -179,6 +179,8 @@ components:
                 defaultImage:
                     type: string
                     description: Address of showcase image
+                unit:
+                    type: string
             required:
                 - title
                 - price
@@ -188,6 +190,7 @@ components:
                 title: Organic Carrots
                 description: Very organic vegetable
                 price: 50
+                unit: 1kg
                 quantity: 500
                 defaultImage: 4864654654.png
         Review:

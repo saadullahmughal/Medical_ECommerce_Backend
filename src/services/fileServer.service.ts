@@ -32,6 +32,7 @@ export const saveImage = async (image: UploadedFile) => {
         if (image.mimetype.indexOf("image/") == 0 && !image.truncated) {
             console.log(image.name)
             const result = await put(image.name, image.data, { access: "public" })
+            console.log(result)
             return { originalName: image.name, savedName: path.basename(result.url) }
         }
         else return null

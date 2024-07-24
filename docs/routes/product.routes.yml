@@ -87,6 +87,9 @@ tags:
                                             type: number
                                             example: 250
                                             description: Number of orders with this product
+                                        unit:
+                                            type: string
+                                            example: 1kg
                                         reviews:
                                             type: array
                                             items:
