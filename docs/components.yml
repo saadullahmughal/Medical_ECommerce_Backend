@@ -172,6 +172,8 @@ components:
                     type: string
                 price:
                     type: number
+                description:
+                    type: string
                 quantity:
                     type: number
                 defaultImage:
@@ -184,6 +186,7 @@ components:
                 - defaultImage
             example:
                 title: Organic Carrots
+                description: Very organic vegetable
                 price: 50
                 quantity: 500
                 defaultImage: 4864654654.png

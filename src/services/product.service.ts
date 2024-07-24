@@ -4,6 +4,7 @@ import Review from "../models/review.model"
 import { format } from "date-fns"
 import Order from "../models/order.model"
 import { parseMongoError } from "../utils/errorParser"
+import { truncate } from "fs/promises"
 
 export const addProductData = async (productInfo: Record<string, any>) => {
     try {
@@ -109,15 +110,13 @@ export const getProducts = async (maxNumber: number, filters: Record<string, any
     if (searchText) filterQuery['title'] = { $regex: "\\b(?:" + searchText + ")", $options: "i" }
 
     try {
-        const results = await Product.find(filterQuery).limit(maxNumber).select({ title: true, price: true, images: 1, defaultImage: 1, quantity: 1 }).exec()
+        const results = await Product.find(filterQuery).limit(maxNumber).select({ _id: false, title: true, price: true, images: 1, defaultImage: 1, quantity: 1, description: true }).exec()
         if (!results) return { done: true, message: [] }
         const responses = results.map((doc) => {
             const element = doc.toObject()
             const validImgData = element.images.length > element.defaultImage
             return {
-                title: element.title,
-                price: element.price,
-                quatity: element.quantity,
+                ...element,
                 defaultImage: validImgData ? element.images[element.defaultImage] : null
             }
         })
