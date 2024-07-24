@@ -45,15 +45,15 @@ const logInService = (reqBody) => __awaiter(void 0, void 0, void 0, function* ()
             password: bcrypt_1.default.hashSync(reqBody === null || reqBody === void 0 ? void 0 : reqBody.password, salt),
             userName: reqBody === null || reqBody === void 0 ? void 0 : reqBody.userName,
         };
-        const userFound = yield user_model_1.default.findOne(record);
+        const userFound = yield user_model_1.default.findOne(record, { createdAt: false, updatedAt: false, password: false, _id: false, __v: false });
         if (!userFound)
             return { done: false, reason: "Invalid credentials" };
         const tokenPayload = Object.assign({}, userFound.toObject());
-        delete tokenPayload["password"];
+        //delete tokenPayload["password"]
         let refreshToken = (0, token_1.genToken)({ uid: tokenPayload === null || tokenPayload === void 0 ? void 0 : tokenPayload.userName }, "300d");
         yield refreshToken_model_1.default.create({ token: refreshToken });
         let token = (_a = (0, token_1.genToken)(tokenPayload, 3600)) === null || _a === void 0 ? void 0 : _a.toString();
-        return { done: true, access: token || "", refresh: refreshToken || "" };
+        return { done: true, userData: tokenPayload, access: token || "", refresh: refreshToken || "" };
     }
     catch (error) {
         return { done: false, message: (0, errorParser_1.parseMongoError)(error) };

@@ -100,11 +100,37 @@ tags:
                                 refresh:
                                     type: string
                                     description: Refresh token
+                                userData:
+                                    type: object
+                                    properties:
+                                        userName:
+                                            type: string
+                                        email:
+                                            type: string
+                                        dateOfBirth:
+                                            type: date
+                                        gender:
+                                            type: string
+                                            enum: ["Male", "Female", "Other"]
+                                        mobile:
+                                            type: string
+                                        image:
+                                            type: string
+                                        role:
+                                            type: string
+                                            enum: ["user", "admin"]
                             example:
                                 done: true
                                 access: Access token
                                 refresh: Refresh token
-
+                                userData:
+                                    userName: Saadullah
+                                    email: saadullahmughal450@gmail.com
+                                    dateOfBirth: 2004-07-03T12:55:57.392Z
+                                    gender: Male
+                                    mobile: 0317 4278187
+                                    image: 1721033755095-uzxkYXjtCzI7uUsy9HOViNn8FGtDZC.jpg
+                                    role: admin
             "417":
                 description: Failed to login
                 content:
