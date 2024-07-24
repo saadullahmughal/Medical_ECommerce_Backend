@@ -5,7 +5,6 @@ tags:
 /img/{img}:
     get:
         summary: Get the image using filename
-        tags: [File Server]
         security:
             - bearerAuth: []
         parameters:

@@ -8,6 +8,6 @@ const fileServer_controller_1 = require("../controllers/fileServer.controller");
 const auth_1 = require("../middlewares/auth");
 const imgUploadField = "image";
 const router = express_1.default.Router();
-router.get("/:img", (0, auth_1.auth)(), fileServer_controller_1.getImg);
+router.get("/:img", fileServer_controller_1.getImg);
 router.post("/", (0, auth_1.auth)("admin"), fileServer_controller_1.postImg);
 exports.default = router;
