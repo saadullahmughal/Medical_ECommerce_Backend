@@ -11,16 +11,17 @@ import {
 import { auth } from "../middlewares/auth"
 import { validate } from "../middlewares/validate"
 import { addProductReq, addReviewReq, addStockReq, delProductReq, getFilteredProductsReq, updateProductReq } from "../validations/product.validation"
+import { verifyMongoConnection } from "../middlewares/checkConnection"
 
 const router = Router()
 
-router.get("/:productName", auth(), getProductInfo)
-router.post("/", auth("admin"), validate(addProductReq), addProduct)
-router.put("/", auth("admin"), validate(updateProductReq), updateProduct)
-router.post("/review", auth(), validate(addReviewReq), addProductReview)
-router.post("/get", auth(), validate(getFilteredProductsReq), getProductsS)
-router.patch("/addStock", auth("admin"), validate(addStockReq), addStock)
-router.delete("/", auth("admin"), validate(delProductReq), delProduct)
+router.get("/:productName", auth(), verifyMongoConnection, getProductInfo)
+router.post("/", auth("admin"), validate(addProductReq), verifyMongoConnection, addProduct)
+router.put("/", auth("admin"), validate(updateProductReq), verifyMongoConnection, updateProduct)
+router.post("/review", auth(), validate(addReviewReq), verifyMongoConnection, addProductReview)
+router.post("/get", auth(), validate(getFilteredProductsReq), verifyMongoConnection, getProductsS)
+router.patch("/addStock", auth("admin"), validate(addStockReq), verifyMongoConnection, addStock)
+router.delete("/", auth("admin"), validate(delProductReq), verifyMongoConnection, delProduct)
 
 export default router
 

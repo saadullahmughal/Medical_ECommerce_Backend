@@ -7,7 +7,9 @@ const emailPassword = process.env?.EMAIL_PASSWORD
 const emailID = process.env?.EMAIL_ID
 const emailTitle = process.env?.EMAIL_TITLE
 
+
 const transporter = nodemailer.createTransport({
+    pool: true,
     service: "gmail",
     host: "smtp.gmail.com",
     port: 587,
@@ -21,7 +23,11 @@ const transporter = nodemailer.createTransport({
 
 export const verifyConnection = async () => {
     try {
-        return transporter.verify()
+        if (!transporter.isIdle) {
+            const result = await transporter.verify()
+            return result
+        }
+        return true
     } catch (error) {
         console.error(error)
         return false
@@ -42,7 +48,7 @@ export const sendResetLink = async (receipt: string) => {
             "</b> <br>If you didn't ask for such a token, please ignore the mail and don't share the token. Token will expire in 15 minutes.",
     }
     try {
-        const results = await transporter.sendMail(message)
+        transporter.sendMail(message)
         return { done: true }
     } catch (error) {
         console.error(error)

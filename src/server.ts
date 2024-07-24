@@ -3,12 +3,14 @@ import routes from "./routes"
 import httpStatus from "http-status"
 import cookie_parser from "cookie-parser"
 import fileUpload from "express-fileupload"
+import cors from "cors"
 
 const app: express.Application = express()
 
 app.use(express.json())
 app.use(cookie_parser())
 app.use(fileUpload())
+app.use(cors())
 app.use(routes)
 
 app.use((req, res) => {

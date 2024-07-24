@@ -1,30 +1,41 @@
 import { UploadedFile } from "express-fileupload"
 import fs, { existsSync } from "fs"
 import path from "path"
+import { getDownloadUrl, put } from "@vercel/blob"
 
 const dirBaseAddr = "D:/Devminified/Node/Medical_ECommerce_Backend/images/"
+const blobBaseAddr = "https://l0exfqlkcyslzqlp.public.blob.vercel-storage.com/"
 
 
-export const getImgAddress = (img: string) => {
-    const imgAddr = dirBaseAddr + img
-    if (!fs.existsSync(imgAddr)) return null
-    else return imgAddr
+export const fetchImg = async (imgName: string) => {
+    try {
+        const imgAddr = blobBaseAddr + imgName
+        const url = getDownloadUrl(imgAddr)
+        const response = await fetch(url)
+        //console.log(response.body)
+        if (response && response.ok && !response.body?.locked) {
+            const contentType = response.headers.get("content-type") as string
+            const data = Buffer.from(await response.arrayBuffer())
+            return {
+                type: contentType, data: data, url: response.url
+            }
+        }
+        else return null
+    } catch (error) {
+        console.error(error)
+        return null
+    }
 }
 
-
-export const saveImage = async (image: UploadedFile, dirPath: string) => {
-    const imgPath = path.join(dirPath)
-    let filePath
-    if (image.mimetype.indexOf("image/") == 0 && !image.truncated) {
-        console.log(image.name)
-        const fileName = Date.now().toString()
-        const fileExt = image.name.substring(image.name.lastIndexOf("."))
-        filePath = path.join(dirPath, fileName + fileExt)
-        let ind = 0
-        while (existsSync(filePath)) {
-            filePath = path.join(dirPath, fileName + ind + fileExt)
+export const saveImage = async (image: UploadedFile) => {
+    try {
+        if (image.mimetype.indexOf("image/") == 0 && !image.truncated) {
+            console.log(image.name)
+            const result = await put(image.name, image.data, { access: "public" })
+            return { originalName: image.name, savedName: path.basename(result.url) }
         }
-        await image.mv(filePath)
-        return { originalName: image.name, savedName: path.basename(filePath as string) }
-    } else return null
+        else return null
+    } catch (error) {
+        return null
+    }
 }

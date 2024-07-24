@@ -36,6 +36,7 @@
                                         productTitle: Carrots
                                         productCount: 40
                                         unitCost: 60
+                                    minItems: 1
                             grandTotal:
                                 type: number
                                 format: integer

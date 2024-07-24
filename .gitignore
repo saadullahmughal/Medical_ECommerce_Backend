@@ -1,9 +1,5 @@
 node_modules
-rough.yml
-.env.*
-.env
-src/utils/cipher.*
 build
-images
-src/test*.ts
-src/test*.js
+rough.yml
+.vercel
+.env

@@ -1,6 +1,6 @@
 import express from "express"
 import httpStatus from "http-status"
-import { getImgAddress, saveImage } from "../services/fileServer.service"
+import { fetchImg, saveImage } from "../services/fileServer.service"
 import path from "path"
 import fileUpload, { FileArray, UploadedFile } from "express-fileupload"
 import { configDotenv } from "dotenv"
@@ -13,9 +13,13 @@ const dirBaseAddr = "images/"
 
 export const getImg = async (req: express.Request, res: express.Response) => {
     const imgName = req.params?.img
-    const imgAddr = getImgAddress(imgName)
-    if (!imgAddr) res.sendStatus(httpStatus.NOT_FOUND)
-    else res.status(httpStatus.OK).sendFile(imgAddr)
+    const img = await fetchImg(imgName)
+    //console.log(img?.type)
+    if (!img) res.sendStatus(httpStatus.NOT_FOUND)
+    else {
+        //console.log(img.data.byteLength)
+        res.status(httpStatus.OK).contentType(img.type).end(img.data)
+    }
 }
 
 export const postImg = async (req: express.Request, res: express.Response) => {
@@ -29,11 +33,11 @@ export const postImg = async (req: express.Request, res: express.Response) => {
             const imgDirPath = "images"
             if (Object.keys(images).some((element => element == "name"))) {
                 const image = images as UploadedFile
-                const result = await saveImage(image, imgDirPath)
+                const result = await saveImage(image)
                 if (result) savedAddr.push(result)
             } else {
                 const imageArray = images as UploadedFile[]
-                const promises = imageArray.map((image) => saveImage(image, imgDirPath))
+                const promises = imageArray.map((image) => saveImage(image))
                 Promise.all(promises)
                 promises.forEach((element) => { if (element) savedAddr.push(element) })
             }

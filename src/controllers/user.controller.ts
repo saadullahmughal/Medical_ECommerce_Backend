@@ -32,8 +32,7 @@ export const addProfilePic = async (req: express.Request, res: express.Response)
     let savedName = ""
     if (!image) res.status(httpStatus.BAD_REQUEST).send("No profile image uploaded")
     else {
-        const imgDirPath = "images"
-        const result = await saveImage(image, imgDirPath)
+        const result = await saveImage(image)
         if (!result) {
             res.status(httpStatus.EXPECTATION_FAILED).send({ done: false, message: "No valid profile image uploaded" })
             return

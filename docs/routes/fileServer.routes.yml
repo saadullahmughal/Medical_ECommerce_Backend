@@ -45,13 +45,15 @@ tags:
                 multipart/form-data:
                     schema:
                         type: object
+                        required:
+                            - images
                         properties:
-                            required: image
                             images:
                                 type: array
                                 items:
                                     type: string
                                     format: binary
+                                minItems: 1
         responses:
             "401":
                 content:

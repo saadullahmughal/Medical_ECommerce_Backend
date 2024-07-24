@@ -1,7 +1,13 @@
 import express from "express"
 import swaggerJsdoc from "swagger-jsdoc"
-import swaggerUi from "swagger-ui-express"
+import swaggerUi, { JsonObject } from "swagger-ui-express"
+import { absolutePath, SwaggerUIBundle } from "swagger-ui-dist"
+import path from "path"
+import { readFileSync } from "fs"
 //import swaggerDefinition from "../../docs/swaggerDef"
+
+const jsonFile = process.env?.jsonFile || "swagger.json"
+
 
 const router = express.Router()
 
@@ -20,7 +26,7 @@ const swaggerDefinition = {
     servers: [
         {
             description: "Main API Endpoint",
-            url: `http://localhost:5000`,
+            url: `https://medical-e-commerce-backend.vercel.app/`,
         },
     ],
 }
@@ -30,7 +36,12 @@ const specs = swaggerJsdoc({
     apis: ["docs/*.yml", ".../routes/*.js", "docs/*/*.yml"],
 })
 
-router.use("/", swaggerUi.serve, swaggerUi.setup(specs))
+// const mySpecs = readFileSync(jsonFile).toString()
+// console.log(mySpecs)
+
+router.use("/", swaggerUi.serve, swaggerUi.setup(specs, {
+    customCssUrl: "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.17.14/swagger-ui.min.css",
+}))
 // router.get(
 //     "/",
 //     swaggerUi.setup(specs, {
