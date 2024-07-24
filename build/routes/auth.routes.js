@@ -1,0 +1,22 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const auth_controller_1 = require("../controllers/auth.controller");
+const auth_1 = require("../middlewares/auth");
+const checkConnection_1 = require("../middlewares/checkConnection");
+const validate_1 = require("../middlewares/validate");
+const auth_validation_1 = require("../validations/auth.validation");
+const user_validation_1 = require("../validations/user.validation");
+const router = express_1.default.Router();
+router.post("/signUp", (0, validate_1.validate)(auth_validation_1.signUpReqBody), checkConnection_1.verifyMongoConnection, auth_controller_1.signUp);
+router.post("/logIn", (0, validate_1.validate)(auth_validation_1.logInReqBody), checkConnection_1.verifyMongoConnection, auth_controller_1.logIn);
+router.post("/logOut", (0, auth_1.auth)(), (0, validate_1.validate)(auth_validation_1.logOutReqBody), checkConnection_1.verifyMongoConnection, auth_controller_1.logOut);
+router.post("/forgotPassword", (0, validate_1.validate)(auth_validation_1.forgotPasswordReqBody), checkConnection_1.verifyMongoConnection, checkConnection_1.verifyMailerConnection, auth_controller_1.forgotPassword);
+router.post("/resetPassword", (0, validate_1.validate)(auth_validation_1.resetPasswordReqBody), checkConnection_1.verifyMongoConnection, auth_controller_1.resetPassword);
+router.post("/refreshToken", (0, auth_1.authIgnoringExpiry)(), (0, validate_1.validate)(auth_validation_1.refreshTokenReqBody), checkConnection_1.verifyMongoConnection, auth_controller_1.refreshToken);
+router.patch("/modifyAuth", (0, auth_1.auth)(), (0, validate_1.validate)(user_validation_1.changePasswordOrEmailReqBody), checkConnection_1.verifyMongoConnection, auth_controller_1.changePasswordOrEmail);
+router.post("/addUser", (0, auth_1.auth)("admin"), (0, validate_1.validate)(auth_validation_1.addUserReqBody), auth_controller_1.signUp);
+exports.default = router;

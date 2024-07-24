@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const userDataForm_controller_1 = require("../controllers/userDataForm.controller");
+const validate_1 = require("../middlewares/validate");
+const userDataForm_validation_1 = require("../validations/userDataForm.validation");
+const checkConnection_1 = require("../middlewares/checkConnection");
+const router = (0, express_1.Router)();
+router.post("/submitForm", (0, validate_1.validate)(userDataForm_validation_1.submitFormReq), checkConnection_1.verifyMongoConnection, userDataForm_controller_1.submitForm);
+exports.default = router;

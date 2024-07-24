@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const user_controller_1 = require("../controllers/user.controller");
+const auth_1 = require("../middlewares/auth");
+const validate_1 = require("../middlewares/validate");
+const user_validation_1 = require("../validations/user.validation");
+const checkConnection_1 = require("../middlewares/checkConnection");
+const router = (0, express_1.Router)();
+router.get("/", (0, auth_1.auth)(), checkConnection_1.verifyMongoConnection, user_controller_1.getUser);
+router.put("/", (0, auth_1.auth)(), (0, validate_1.validate)(user_validation_1.updateUserReqBody), checkConnection_1.verifyMongoConnection, user_controller_1.updateUser);
+router.post("/", (0, auth_1.auth)(), checkConnection_1.verifyMongoConnection, user_controller_1.addProfilePic);
+exports.default = router;

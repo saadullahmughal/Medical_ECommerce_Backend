@@ -12,6 +12,10 @@
         "add-build": "git add build",
         "compile-swagger": "node build/compileSwaggerSpecs.js"
     },
+    "pre-commit": [
+        "build",
+        "add-build"
+    ],
     "author": "Saadullah Mughal <saadullahmughal4@gmail.com>",
     "license": "ISC",
     "description": "",
