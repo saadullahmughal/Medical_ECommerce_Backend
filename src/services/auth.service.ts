@@ -46,7 +46,7 @@ export const logInService = async (reqBody: Record<string, any>) => {
             "300d"
         )
         await RefreshTokens.create({ token: refreshToken })
-        let token = genToken(tokenPayload, 3600)?.toString()
+        let token = genToken(tokenPayload, process.env?.ACCESS_EXPIRY || 3600)?.toString()
         return { done: true, userData: tokenPayload, access: token || "", refresh: refreshToken || "" }
     } catch (error) {
         return { done: false, message: parseMongoError(error) }
@@ -113,7 +113,7 @@ export const refreshTokenService = async (token: string) => {
                 "300d"
             )
             await RefreshTokens.findOneAndUpdate({ token: token }, { token: newRefreshToken })
-            let newAccessToken = genToken(newTokenPayload, 120)
+            let newAccessToken = genToken(newTokenPayload, process.env.ACCESS_EXPIRY || 3600)
             return { done: true, access: newAccessToken, refresh: newRefreshToken }
         } else {
             return { done: false, message: "Invalid token" }

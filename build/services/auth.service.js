@@ -39,7 +39,7 @@ const signUpService = (reqBody) => __awaiter(void 0, void 0, void 0, function* (
 });
 exports.signUpService = signUpService;
 const logInService = (reqBody) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+    var _a, _b;
     try {
         let record = {
             password: bcrypt_1.default.hashSync(reqBody === null || reqBody === void 0 ? void 0 : reqBody.password, salt),
@@ -52,7 +52,7 @@ const logInService = (reqBody) => __awaiter(void 0, void 0, void 0, function* ()
         //delete tokenPayload["password"]
         let refreshToken = (0, token_1.genToken)({ uid: tokenPayload === null || tokenPayload === void 0 ? void 0 : tokenPayload.userName }, "300d");
         yield refreshToken_model_1.default.create({ token: refreshToken });
-        let token = (_a = (0, token_1.genToken)(tokenPayload, 3600)) === null || _a === void 0 ? void 0 : _a.toString();
+        let token = (_b = (0, token_1.genToken)(tokenPayload, ((_a = process.env) === null || _a === void 0 ? void 0 : _a.ACCESS_EXPIRY) || 3600)) === null || _b === void 0 ? void 0 : _b.toString();
         return { done: true, userData: tokenPayload, access: token || "", refresh: refreshToken || "" };
     }
     catch (error) {
@@ -124,7 +124,7 @@ const refreshTokenService = (token) => __awaiter(void 0, void 0, void 0, functio
             let newTokenPayload = Object.assign({}, userFound === null || userFound === void 0 ? void 0 : userFound.toObject());
             let newRefreshToken = (0, token_1.genToken)({ uid: newTokenPayload === null || newTokenPayload === void 0 ? void 0 : newTokenPayload.email }, "300d");
             yield refreshToken_model_1.default.findOneAndUpdate({ token: token }, { token: newRefreshToken });
-            let newAccessToken = (0, token_1.genToken)(newTokenPayload, 120);
+            let newAccessToken = (0, token_1.genToken)(newTokenPayload, process.env.ACCESS_EXPIRY || 3600);
             return { done: true, access: newAccessToken, refresh: newRefreshToken };
         }
         else {
