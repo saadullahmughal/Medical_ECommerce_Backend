@@ -6,6 +6,7 @@ const tokenSign = process.env?.JWT_TOKEN_SIGNATURE || ""
 
 export const genToken = function (payload: object, expires: string | number | undefined): string | null {
     try {
+        console.log("Expiry in ", expires)
         return sign(payload, tokenSign, { expiresIn: expires })
     } catch (error) {
         console.error(error)

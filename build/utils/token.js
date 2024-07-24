@@ -7,6 +7,7 @@ require("dotenv").config();
 const tokenSign = ((_a = process.env) === null || _a === void 0 ? void 0 : _a.JWT_TOKEN_SIGNATURE) || "";
 const genToken = function (payload, expires) {
     try {
+        console.log("Expiry in ", expires);
         return (0, jsonwebtoken_1.sign)(payload, tokenSign, { expiresIn: expires });
     }
     catch (error) {
