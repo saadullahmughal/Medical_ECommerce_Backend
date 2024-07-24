@@ -40,7 +40,6 @@ const postImg = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.sendStatus(http_status_1.default.BAD_REQUEST);
     else
         try {
-            const imgDirPath = "images";
             if (Object.keys(images).some((element => element == "name"))) {
                 const image = images;
                 const result = yield (0, fileServer_service_1.saveImage)(image);

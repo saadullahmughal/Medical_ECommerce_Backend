@@ -31,12 +31,13 @@ export const saveImage = async (image: UploadedFile) => {
     try {
         if (image.mimetype.indexOf("image/") == 0 && !image.truncated) {
             console.log(image.name)
-            const result = await put(image.name, image.data, { access: "public" })
+            const result = await put(image.name, image.data, { access: "public", token: process.env.IMAGE_BLOB_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN })
             console.log(result)
             return { originalName: image.name, savedName: path.basename(result.url) }
         }
         else return null
     } catch (error) {
+        console.error(error)
         return null
     }
 }

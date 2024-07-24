@@ -30,7 +30,6 @@ export const postImg = async (req: express.Request, res: express.Response) => {
     if (!images) res.sendStatus(httpStatus.BAD_REQUEST)
     else
         try {
-            const imgDirPath = "images"
             if (Object.keys(images).some((element => element == "name"))) {
                 const image = images as UploadedFile
                 const result = await saveImage(image)

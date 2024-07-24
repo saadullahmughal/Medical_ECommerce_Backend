@@ -44,7 +44,7 @@ const saveImage = (image) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (image.mimetype.indexOf("image/") == 0 && !image.truncated) {
             console.log(image.name);
-            const result = yield (0, blob_1.put)(image.name, image.data, { access: "public" });
+            const result = yield (0, blob_1.put)(image.name, image.data, { access: "public", token: process.env.IMAGE_BLOB_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN });
             console.log(result);
             return { originalName: image.name, savedName: path_1.default.basename(result.url) };
         }
@@ -52,6 +52,7 @@ const saveImage = (image) => __awaiter(void 0, void 0, void 0, function* () {
             return null;
     }
     catch (error) {
+        console.error(error);
         return null;
     }
 });
