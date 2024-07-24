@@ -109,7 +109,7 @@ export const refreshTokenService = async (token: string) => {
         if (userFound) {
             let newTokenPayload = { ...userFound?.toObject() }
             let newRefreshToken = genToken(
-                { uid: newTokenPayload?.email },
+                { uid: newTokenPayload?.userName },
                 "300d"
             )
             await RefreshTokens.findOneAndUpdate({ token: token }, { token: newRefreshToken })

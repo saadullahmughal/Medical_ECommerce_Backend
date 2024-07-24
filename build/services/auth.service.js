@@ -122,7 +122,7 @@ const refreshTokenService = (token) => __awaiter(void 0, void 0, void 0, functio
         const userFound = yield user_model_1.default.findOne({ userName: userName });
         if (userFound) {
             let newTokenPayload = Object.assign({}, userFound === null || userFound === void 0 ? void 0 : userFound.toObject());
-            let newRefreshToken = (0, token_1.genToken)({ uid: newTokenPayload === null || newTokenPayload === void 0 ? void 0 : newTokenPayload.email }, "300d");
+            let newRefreshToken = (0, token_1.genToken)({ uid: newTokenPayload === null || newTokenPayload === void 0 ? void 0 : newTokenPayload.userName }, "300d");
             yield refreshToken_model_1.default.findOneAndUpdate({ token: token }, { token: newRefreshToken });
             let newAccessToken = (0, token_1.genToken)(newTokenPayload, process.env.ACCESS_EXPIRY || 3600);
             return { done: true, access: newAccessToken, refresh: newRefreshToken };
