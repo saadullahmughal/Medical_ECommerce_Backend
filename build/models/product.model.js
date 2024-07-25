@@ -15,6 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const productSchema = new mongoose_1.default.Schema({
     title: { type: String, required: true, unique: true },
+    shorTitle: { type: String },
+    unit: { type: String },
     description: { type: String },
     price: { type: Number, min: 1, required: true },
     productType: { type: String },

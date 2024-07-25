@@ -120,7 +120,7 @@ const getProducts = (maxNumber, filters) => __awaiter(void 0, void 0, void 0, fu
     if (searchText)
         filterQuery['title'] = { $regex: "\\b(?:" + searchText + ")", $options: "i" };
     try {
-        const results = yield product_model_1.default.find(filterQuery).limit(maxNumber).select({ _id: false, title: true, price: true, images: 1, defaultImage: 1, quantity: 1, description: true }).exec();
+        const results = yield product_model_1.default.find(filterQuery).limit(maxNumber).select({ _id: false, title: true, price: true, images: 1, defaultImage: 1, quantity: 1, description: true, shortTitle: true }).exec();
         if (!results)
             return { done: true, message: [] };
         const responses = results.map((doc) => {

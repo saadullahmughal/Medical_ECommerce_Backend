@@ -119,7 +119,7 @@ const refreshTokenService = (token) => __awaiter(void 0, void 0, void 0, functio
         if (!tokenFound)
             return { done: false, message: "Invalid token" };
         let userName = tokenPayload === null || tokenPayload === void 0 ? void 0 : tokenPayload.uid;
-        const userFound = yield user_model_1.default.findOne({ userName: userName });
+        const userFound = yield user_model_1.default.findOne({ userName: userName }, { createdAt: false, updatedAt: false, password: false, _id: false, __v: false });
         if (userFound) {
             let newTokenPayload = Object.assign({}, userFound === null || userFound === void 0 ? void 0 : userFound.toObject());
             let newRefreshToken = (0, token_1.genToken)({ uid: newTokenPayload === null || newTokenPayload === void 0 ? void 0 : newTokenPayload.userName }, "300d");

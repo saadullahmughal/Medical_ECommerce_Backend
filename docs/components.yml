@@ -170,6 +170,8 @@ components:
             properties:
                 title:
                     type: string
+                shortTitle:
+                    type: string
                 price:
                     type: number
                 description:
@@ -188,6 +190,7 @@ components:
                 - defaultImage
             example:
                 title: Organic Carrots
+                shortTitle: Carrots
                 description: Very organic vegetable
                 price: 50
                 unit: 1kg

@@ -105,7 +105,7 @@ export const refreshTokenService = async (token: string) => {
         const tokenFound = await RefreshTokens.findOne({ token: token })
         if (!tokenFound) return { done: false, message: "Invalid token" }
         let userName = tokenPayload?.uid
-        const userFound = await User.findOne({ userName: userName })
+        const userFound = await User.findOne({ userName: userName }, { createdAt: false, updatedAt: false, password: false, _id: false, __v: false })
         if (userFound) {
             let newTokenPayload = { ...userFound?.toObject() }
             let newRefreshToken = genToken(
