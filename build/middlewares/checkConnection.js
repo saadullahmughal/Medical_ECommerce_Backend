@@ -21,7 +21,7 @@ const uri = (_a = process.env) === null || _a === void 0 ? void 0 : _a.MONGO_URI
 let mongoConnection;
 const verifyMongoConnection = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (!mongoConnection || !(mongoConnection.readyState == mongoose_1.default.STATES.connected))
+        if (!mongoConnection)
             mongoConnection = (yield mongoose_1.default.connect(uri)).connection;
         return next();
     }
