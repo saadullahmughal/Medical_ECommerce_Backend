@@ -18,16 +18,16 @@ const orderSchema = new mongoose_1.default.Schema({
     shippingFee: { type: Number },
     discounted: { type: Number },
     grandTotal: { type: Number, required: true },
-    paymentAccountInfo: {
-        required: true, type: {
-            _id: false,
-            accountType: { type: String, required: true, enum: ["Master", "Visa", "Amex", "PayPal"] },
-            ID: { type: String, required: true },
-            legalName: { tytpe: String },
-            expiry: { type: String },
-            cvv: { type: Number },
-        }
-    },
+    // paymentAccountInfo: {
+    //     required: true, type: {
+    //         _id: false,
+    //         accountType: { type: String, required: true, enum: ["Master", "Visa", "Amex", "PayPal"] },
+    //         ID: { type: String, required: true },
+    //         legalName: { tytpe: String },
+    //         expiry: { type: String },
+    //         cvv: { type: Number },
+    //     }
+    // },
     transactionID: { type: String, required: true }
 }, { timestamps: true });
 const Order = mongoose_1.default.model("order", orderSchema);

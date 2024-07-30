@@ -11,12 +11,13 @@ export const handlePaymentReq = Joi.object({
         shippingFee: Joi.number().integer().positive(),
         discounted: Joi.number().integer().positive(),
         convienceFee: Joi.number().integer().positive(),
-        paymentAccountInfo: Joi.object({
-            accountType: Joi.string().required().valid("Master", "Visa", "Amex", "PayPal"),
-            ID: Joi.string().required(),
-            legalName: Joi.string(),
-            expiry: Joi.string(),
-            cvv: Joi.number().integer().positive()
-        })
+        // paymentAccountInfo: Joi.object({
+        //     accountType: Joi.string().required().valid("Master", "Visa", "Amex", "PayPal"),
+        //     ID: Joi.string().required(),
+        //     legalName: Joi.string(),
+        //     expiry: Joi.string(),
+        //     cvv: Joi.number().integer().positive()
+        // }),
+        paymentToken: Joi.string().required()
     }
 })
