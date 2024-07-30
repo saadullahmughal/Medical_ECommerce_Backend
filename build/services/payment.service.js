@@ -13,7 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.processPayment = exports.addToCart = void 0;
+exports.processPayment = exports.processPaymentv2 = exports.addToCart = void 0;
+const crypto_1 = require("crypto");
 const order_model_1 = __importDefault(require("../models/order.model"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const product_model_1 = __importDefault(require("../models/product.model"));
@@ -30,18 +31,29 @@ const addToCart = (orderItem, invoiceID) => __awaiter(void 0, void 0, void 0, fu
         const cost = unitPrice * orderItem.count;
         let invoice;
         if (!invoiceID) {
-            invoice = yield stripe.invoices.create({ customer: customerID });
+            invoice = yield stripe.invoices.create({ customer: customerID, description: "Medical E-Commerce" });
         }
         else {
             invoice = yield stripe.invoices.retrieve(invoiceID);
         }
-        yield stripe.invoiceItems.create({
-            invoice: invoice.id,
-            customer: invoice.customer,
-            unit_amount: unitPrice,
-            quantity: orderItem.count,
-            description: orderItem.title
-        });
+        let itemID;
+        for (const item of invoice.lines.data) {
+            if (item.description == orderItem.title) {
+                itemID = item.id;
+                break;
+            }
+        }
+        if (!itemID)
+            yield stripe.invoiceItems.create({
+                invoice: invoice.id,
+                customer: invoice.customer,
+                unit_amount: unitPrice * 100,
+                quantity: orderItem.count,
+                description: orderItem.title
+            });
+        else
+            yield stripe.invoiceItems.update(itemID, { quantity: orderItem.count });
+        invoice = yield stripe.invoices.retrieve(invoice.id);
         return { done: true, message: invoice.id };
     }
     catch (error) {
@@ -50,9 +62,26 @@ const addToCart = (orderItem, invoiceID) => __awaiter(void 0, void 0, void 0, fu
     }
 });
 exports.addToCart = addToCart;
+const processPaymentv2 = (orderData) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { invoiceID, paymentMethodID } = orderData;
+        const customerID = (yield stripe.invoices.retrieve(invoiceID)).customer;
+        yield stripe.paymentMethods.attach(paymentMethodID, { customer: customerID });
+        //await stripe.invoices.update(invoiceID, { default_payment_method: paymentMethodID })
+        const result = yield stripe.invoices.pay(invoiceID, { payment_method: paymentMethodID });
+        stripe.invoices.update(invoiceID, {});
+        //const result = await stripe.invoices.sendInvoice(invoiceID)
+        return { done: true, message: result.receipt_number };
+    }
+    catch (error) {
+        console.error(error);
+        return { done: false, message: (0, errorParser_1.parseMongoError)(error) };
+    }
+});
+exports.processPaymentv2 = processPaymentv2;
 const processPayment = (orderData) => __awaiter(void 0, void 0, void 0, function* () {
-    //   const transactionID = randomBytes(64).toString("base64")
-    //   orderData["transactionID"] = transactionID
+    const transactionID = (0, crypto_1.randomBytes)(64).toString("base64");
+    orderData["transactionID"] = transactionID;
     const session = yield mongoose_1.default.startSession();
     session.startTransaction();
     try {
@@ -67,13 +96,13 @@ const processPayment = (orderData) => __awaiter(void 0, void 0, void 0, function
                 return { done: false, message: "Possibly bad request" };
             }
         }
-        //const cardToken = await stripe.paymentMethods.retrieve(orderData.paymentToken)
-        const paymentMethod = (yield stripe.paymentMethods.retrieve(orderData.paymentToken)).card;
-        const paymentIntent = yield stripe.paymentIntents.create({ amount: (orderData === null || orderData === void 0 ? void 0 : orderData.grandTotal) * 100, currency: "pkr", payment_method: orderData.paymentToken, confirm: true, automatic_payment_methods: { enabled: true, allow_redirects: "never" } });
-        //const transaction = await stripe.paymentIntents.confirm(paymentIntent.id)
-        const transaction = paymentIntent;
-        //orderData["paymentAccountInfo"] = { accountType: paymentMethod?.brand, ID: paymentMethod. }
-        const transactionID = transaction.id;
+        // const cardToken = await stripe.paymentMethods.retrieve(orderData.paymentToken)
+        // const paymentMethod = (await stripe.paymentMethods.retrieve(orderData.paymentToken)).card
+        // const paymentIntent = await stripe.paymentIntents.create({ amount: orderData?.grandTotal * 100, currency: "pkr", payment_method: orderData.paymentToken, confirm: true, automatic_payment_methods: { enabled: true, allow_redirects: "never" } })
+        // const transaction = await stripe.paymentIntents.confirm(paymentIntent.id)
+        // const transaction = paymentIntent
+        // orderData["paymentAccountInfo"] = { accountType: paymentMethod?.brand, ID: paymentMethod. }
+        // const transactionID = transaction.id
         orderData["transactionID"] = transactionID;
         const response = yield order_model_1.default.create([orderData], { session });
         if (!response) {

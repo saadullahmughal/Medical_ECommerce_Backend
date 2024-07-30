@@ -16,13 +16,13 @@ exports.handlePaymentReq = joi_1.default.object({
         shippingFee: joi_1.default.number().integer().positive(),
         discounted: joi_1.default.number().integer().positive(),
         convienceFee: joi_1.default.number().integer().positive(),
-        // paymentAccountInfo: Joi.object({
-        //     accountType: Joi.string().required().valid("Master", "Visa", "Amex", "PayPal"),
-        //     ID: Joi.string().required(),
-        //     legalName: Joi.string(),
-        //     expiry: Joi.string(),
-        //     cvv: Joi.number().integer().positive()
-        // }),
-        paymentToken: joi_1.default.string().required()
+        paymentAccountInfo: joi_1.default.object({
+            accountType: joi_1.default.string().required().valid("Master", "Visa", "Amex", "PayPal"),
+            ID: joi_1.default.string().required(),
+            legalName: joi_1.default.string(),
+            expiry: joi_1.default.string(),
+            cvv: joi_1.default.number().integer().positive()
+        }),
+        //paymentToken: Joi.string().required()
     }
 });

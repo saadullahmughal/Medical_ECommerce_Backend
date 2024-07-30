@@ -22,7 +22,8 @@ const stripe_1 = __importDefault(require("stripe"));
 const http_status_1 = __importDefault(require("http-status"));
 const router = express_1.default.Router();
 router.post("/", (0, auth_1.auth)(), (0, validate_1.validate)(payment_validation_1.handlePaymentReq), checkConnection_1.verifyMongoConnection, payment_controller_1.handlePayment);
-router.post("/test", checkConnection_1.verifyMongoConnection, payment_controller_1.testP);
+router.post("/v2", (0, auth_1.auth)(), checkConnection_1.verifyMongoConnection, payment_controller_1.handlePaymentv2);
+router.post("/addToCart", (0, auth_1.auth)(), checkConnection_1.verifyMongoConnection, payment_controller_1.addCart);
 const testStripe = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {

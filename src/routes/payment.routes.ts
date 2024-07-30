@@ -1,5 +1,5 @@
 import express from "express"
-import { handlePayment, testP } from "../controllers/payment.controller"
+import { addCart, handlePayment, handlePaymentv2 } from "../controllers/payment.controller"
 import { auth } from "../middlewares/auth"
 import { validate } from "../middlewares/validate"
 import { handlePaymentReq } from "../validations/payment.validation"
@@ -9,8 +9,11 @@ import httpStatus from "http-status"
 
 const router = express.Router()
 
+
 router.post("/", auth(), validate(handlePaymentReq), verifyMongoConnection, handlePayment)
-router.post("/test", verifyMongoConnection, testP)
+
+router.post("/v2", auth(), verifyMongoConnection, handlePaymentv2)
+router.post("/addToCart", auth(), verifyMongoConnection, addCart)
 
 
 const testStripe = async (req: express.Request, res: express.Response) => {

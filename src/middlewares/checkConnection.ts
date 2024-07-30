@@ -9,7 +9,7 @@ let mongoConnection: mongoose.Connection
 
 export const verifyMongoConnection = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     try {
-        if (!mongoConnection)
+        if (!mongoConnection || mongoConnection.readyState == mongoose.STATES.uninitialized)
             mongoConnection = (await mongoose.connect(uri)).connection
         return next()
     } catch (error) {
