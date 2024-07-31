@@ -98,10 +98,10 @@ export const getProducts = async (maxNumber: number, filters: Record<string, any
     const { searchText, type, newArrivals, minPrice, maxPrice, dietNeeds, allergenFilters } = filters
     let onSales = filters?.onSales
     if (onSales != false && !onSales) onSales = true
-
     let filterQuery: Record<string, any> = { "price": { $gte: 0 } }
     if (type) filterQuery['productType'] = type
     if (onSales) filterQuery['quantity'] = { $gt: 0 }
+    if (newArrivals) filterQuery['createdAt'] = { $gte: new Date(Date.now() - 604800000) }
     if (minPrice) filterQuery['price']['$gte'] = minPrice
     if (maxPrice) filterQuery['price']['$lte'] = maxPrice
     if (dietNeeds) filterQuery['tags'] = { $all: dietNeeds }
@@ -112,7 +112,7 @@ export const getProducts = async (maxNumber: number, filters: Record<string, any
             filterQuery['tags'] = { $all: query }
         }
     }
-    //console.log(filterQuery)
+    console.log(filterQuery)
     if (searchText) filterQuery['title'] = { $regex: "\\b(?:" + searchText + ")", $options: "i" }
 
     console.log(filterQuery)

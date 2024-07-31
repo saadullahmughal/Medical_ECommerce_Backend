@@ -269,7 +269,7 @@ tags:
             - bearerAuth: []
         parameters:
             - in: query
-              name: title
+              name: productName
               type: string
               example: Carrots
         responses:

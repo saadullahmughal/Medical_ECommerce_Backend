@@ -109,6 +109,8 @@ const getProducts = (maxNumber, filters) => __awaiter(void 0, void 0, void 0, fu
         filterQuery['productType'] = type;
     if (onSales)
         filterQuery['quantity'] = { $gt: 0 };
+    if (newArrivals)
+        filterQuery['createdAt'] = { $gte: new Date(Date.now() - 604800000) };
     if (minPrice)
         filterQuery['price']['$gte'] = minPrice;
     if (maxPrice)
@@ -123,7 +125,7 @@ const getProducts = (maxNumber, filters) => __awaiter(void 0, void 0, void 0, fu
             filterQuery['tags'] = { $all: query };
         }
     }
-    //console.log(filterQuery)
+    console.log(filterQuery);
     if (searchText)
         filterQuery['title'] = { $regex: "\\b(?:" + searchText + ")", $options: "i" };
     console.log(filterQuery);
