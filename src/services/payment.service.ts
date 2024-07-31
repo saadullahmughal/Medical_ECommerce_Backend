@@ -41,7 +41,7 @@ export const addToCart = async (orderItem: { title: string, count: number }, inv
         return { done: true, message: invoice.id }
     } catch (error) {
         console.error(error)
-        return { done: false, message: parseMongoError(error) }
+        return { done: false, message: (error as Stripe.errors.StripeError).message }
     }
 }
 
@@ -57,7 +57,7 @@ export const processPaymentv2 = async (orderData: Record<string, any>) => {
         return { done: true, message: result.receipt_number }
     } catch (error) {
         console.error(error)
-        return { done: false, message: parseMongoError(error) }
+        return { done: false, message: (error as Stripe.errors.StripeError).message }
     }
 }
 

@@ -104,10 +104,18 @@ export const getProducts = async (maxNumber: number, filters: Record<string, any
     if (onSales) filterQuery['quantity'] = { $gt: 0 }
     if (minPrice) filterQuery['price']['$gte'] = minPrice
     if (maxPrice) filterQuery['price']['$lte'] = maxPrice
-    if (dietNeeds) filterQuery['amountsPerServing.item'] = { $all: dietNeeds }
-    if (allergenFilters) filterQuery['tags'] = { $all: allergenFilters }
+    if (dietNeeds) filterQuery['tags'] = { $all: dietNeeds }
+    if (allergenFilters) {
+        if (!dietNeeds) filterQuery['tags'] = { $all: allergenFilters }
+        else {
+            const query = [...filterQuery['tags']?.$all, ...allergenFilters]
+            filterQuery['tags'] = { $all: query }
+        }
+    }
     //console.log(filterQuery)
     if (searchText) filterQuery['title'] = { $regex: "\\b(?:" + searchText + ")", $options: "i" }
+
+    console.log(filterQuery)
 
     try {
         const results = await Product.find(filterQuery).limit(maxNumber).select({ _id: false, title: true, price: true, images: 1, defaultImage: 1, quantity: 1, description: true, shortTitle: true, unit: true }).exec()
@@ -122,6 +130,7 @@ export const getProducts = async (maxNumber: number, filters: Record<string, any
         })
         return { done: true, message: responses }
     } catch (error) {
+        console.error(error)
         return { done: false, message: parseMongoError(error) }
     }
 }

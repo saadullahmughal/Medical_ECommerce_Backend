@@ -58,7 +58,7 @@ const addToCart = (orderItem, invoiceID) => __awaiter(void 0, void 0, void 0, fu
     }
     catch (error) {
         console.error(error);
-        return { done: false, message: (0, errorParser_1.parseMongoError)(error) };
+        return { done: false, message: error.message };
     }
 });
 exports.addToCart = addToCart;
@@ -75,7 +75,7 @@ const processPaymentv2 = (orderData) => __awaiter(void 0, void 0, void 0, functi
     }
     catch (error) {
         console.error(error);
-        return { done: false, message: (0, errorParser_1.parseMongoError)(error) };
+        return { done: false, message: error.message };
     }
 });
 exports.processPaymentv2 = processPaymentv2;

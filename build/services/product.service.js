@@ -99,6 +99,7 @@ const getProductData = (productTitle) => __awaiter(void 0, void 0, void 0, funct
 });
 exports.getProductData = getProductData;
 const getProducts = (maxNumber, filters) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const { searchText, type, newArrivals, minPrice, maxPrice, dietNeeds, allergenFilters } = filters;
     let onSales = filters === null || filters === void 0 ? void 0 : filters.onSales;
     if (onSales != false && !onSales)
@@ -113,12 +114,19 @@ const getProducts = (maxNumber, filters) => __awaiter(void 0, void 0, void 0, fu
     if (maxPrice)
         filterQuery['price']['$lte'] = maxPrice;
     if (dietNeeds)
-        filterQuery['amountsPerServing.item'] = { $all: dietNeeds };
-    if (allergenFilters)
-        filterQuery['tags'] = { $all: allergenFilters };
+        filterQuery['tags'] = { $all: dietNeeds };
+    if (allergenFilters) {
+        if (!dietNeeds)
+            filterQuery['tags'] = { $all: allergenFilters };
+        else {
+            const query = [...(_a = filterQuery['tags']) === null || _a === void 0 ? void 0 : _a.$all, ...allergenFilters];
+            filterQuery['tags'] = { $all: query };
+        }
+    }
     //console.log(filterQuery)
     if (searchText)
         filterQuery['title'] = { $regex: "\\b(?:" + searchText + ")", $options: "i" };
+    console.log(filterQuery);
     try {
         const results = yield product_model_1.default.find(filterQuery).limit(maxNumber).select({ _id: false, title: true, price: true, images: 1, defaultImage: 1, quantity: 1, description: true, shortTitle: true, unit: true }).exec();
         if (!results)
@@ -131,6 +139,7 @@ const getProducts = (maxNumber, filters) => __awaiter(void 0, void 0, void 0, fu
         return { done: true, message: responses };
     }
     catch (error) {
+        console.error(error);
         return { done: false, message: (0, errorParser_1.parseMongoError)(error) };
     }
 });
