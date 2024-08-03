@@ -1,7 +1,6 @@
 import httpStatus from "http-status"
 import express from "express"
 import { submitFormService } from "../services/userDataForm.service"
-import { getStoredUserData } from "../middlewares/auth"
 
 export const submitForm = async (req: express.Request, res: express.Response) => {
     const formData = req.body

@@ -1,3 +1,4 @@
+import { required } from "joi"
 import mongoose from "mongoose"
 
 const orderSchema = new mongoose.Schema({
@@ -9,21 +10,13 @@ const orderSchema = new mongoose.Schema({
             unitCost: { type: Number, min: 1, required: true },
         }], required: true
     },
+    status: { type: String, required: true, enum: ["pending", "succeeded", "failed", "cancelled"], default: "pending" },
     userName: { type: String, required: true },
     convienceFee: { type: Number },
     shippingFee: { type: Number },
     discounted: { type: Number },
     grandTotal: { type: Number, required: true },
-    // paymentAccountInfo: {
-    //     required: true, type: {
-    //         _id: false,
-    //         accountType: { type: String, required: true, enum: ["Master", "Visa", "Amex", "PayPal"] },
-    //         ID: { type: String, required: true },
-    //         legalName: { tytpe: String },
-    //         expiry: { type: String },
-    //         cvv: { type: Number },
-    //     }
-    // },
+    netTotal: { type: Number, required: true },
     transactionID: { type: String, required: true }
 }, { timestamps: true })
 

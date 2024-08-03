@@ -36,7 +36,7 @@ const specs = (0, swagger_jsdoc_1.default)({
 // const mySpecs = readFileSync(jsonFile).toString()
 // console.log(mySpecs)
 router.use("/", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(specs, {
-    customCssUrl: "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.17.14/swagger-ui.min.css",
+    customCssUrl: "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.17.14/swagger-ui.min.css"
 }));
 // router.get(
 //     "/",

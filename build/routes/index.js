@@ -20,11 +20,12 @@ const defaultRoutes = [
     { path: "/product", route: product_routes_1.default },
     { path: "/pay", route: payment_routes_1.default }
 ];
-const devRoutes = [{ path: "/", route: docs_routes_1.default }];
+const devRoutes = [{ path: "/api-docs", route: docs_routes_1.default }];
 defaultRoutes.forEach((route) => {
     router.use(route.path, route.route);
 });
 devRoutes.forEach((route) => {
     router.use(route.path, route.route);
 });
+router.get("/", (req, res) => res.redirect("/api-docs"));
 exports.default = router;

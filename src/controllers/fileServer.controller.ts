@@ -1,11 +1,8 @@
 import express from "express"
 import httpStatus from "http-status"
 import { fetchImg, saveImage } from "../services/fileServer.service"
-import path from "path"
-import fileUpload, { FileArray, UploadedFile } from "express-fileupload"
+import { FileArray, UploadedFile } from "express-fileupload"
 import { configDotenv } from "dotenv"
-import { number } from "joi"
-import { existsSync } from "fs"
 configDotenv()
 
 

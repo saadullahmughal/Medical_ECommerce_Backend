@@ -1,28 +1,21 @@
 import express from "express"
-import { addToCart, processPayment, processPaymentv2 } from "../services/payment.service"
+import { cancelPayment, capturePayment, placeOrder } from "../services/payment.service"
 import httpStatus from "http-status"
 import { getStoredUserData } from "../middlewares/auth"
 
-export const handlePayment = async (req: express.Request, res: express.Response) => {
+export const createIntent = async (req: express.Request, res: express.Response) => {
     const userName = getStoredUserData(req)?.userName
-    const response = await processPayment({ ...req.body, userName: userName })
+    const response = await placeOrder(req.body, userName)
     if (!response.done) res.status(httpStatus.EXPECTATION_FAILED).send(response)
     else res.status(httpStatus.CREATED).send(response)
 }
 
-export const handlePaymentv2 = async (req: express.Request, res: express.Response) => {
+export const finalizePayment = async (req: express.Request, res: express.Response) => {
     const userName = getStoredUserData(req)?.userName
-    const response = await processPaymentv2({ ...req.body, userName: userName })
-    if (!response.done) res.status(httpStatus.EXPECTATION_FAILED).send(response)
-    else res.status(httpStatus.CREATED).send(response)
-}
-
-export const addCart = async (req: express.Request, res: express.Response) => {
-    const invoiceID: string | undefined = req.body?.invoiceID
-    const orderItem: { title: string, count: number } = req.body?.orderItem
-
-    const response = await addToCart(orderItem, invoiceID)
-
+    const { capture, intent_id } = req.body
+    let response
+    if (capture) response = await capturePayment(intent_id)
+    else response = await cancelPayment(intent_id)
     if (!response.done) res.status(httpStatus.EXPECTATION_FAILED).send(response)
     else res.status(httpStatus.CREATED).send(response)
 }

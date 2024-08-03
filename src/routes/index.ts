@@ -6,6 +6,7 @@ import fileServerRoutes from "./fileServer.routes"
 import userDataFormRoutes from "./userDataForm.routes"
 import productRoutes from "./product.routes"
 import paymentRoutes from "./payment.routes"
+import httpStatus from "http-status"
 
 let router = express.Router()
 
@@ -17,14 +18,16 @@ const defaultRoutes = [
     { path: "/product", route: productRoutes },
     { path: "/pay", route: paymentRoutes }
 ]
-const devRoutes = [{ path: "/", route: docsRoute }]
+const devRoutes = [{ path: "/api-docs", route: docsRoute }]
 
 defaultRoutes.forEach((route) => {
     router.use(route.path, route.route)
 })
 
+
 devRoutes.forEach((route) => {
     router.use(route.path, route.route)
 })
+router.get("/", (req, res) => res.redirect("/api-docs"))
 
 export default router

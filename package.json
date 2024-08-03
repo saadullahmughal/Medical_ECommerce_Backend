@@ -21,6 +21,7 @@
     "description": "",
     "dependencies": {
         "@vercel/blob": "^0.23.4",
+        "@vercel/edge-config": "^1.2.1",
         "bcrypt": "^5.1.1",
         "cookie-parser": "^1.4.6",
         "cors": "^2.8.5",

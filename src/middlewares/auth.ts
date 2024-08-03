@@ -2,7 +2,6 @@ import express from "express"
 import httpStatus from "http-status"
 import jwt from "jsonwebtoken"
 import { getTokenData, verifyToken } from "../utils/token"
-import Joi from "joi"
 import { AuthToken } from "../validations/auth.validation"
 
 export const getAuthToken = (req: express.Request) => {

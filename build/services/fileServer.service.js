@@ -11,12 +11,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.saveImage = exports.fetchImg = void 0;
 const path_1 = __importDefault(require("path"));
 const blob_1 = require("@vercel/blob");
-const dirBaseAddr = "D:/Devminified/Node/Medical_ECommerce_Backend/images/";
-const blobBaseAddr = "https://l0exfqlkcyslzqlp.public.blob.vercel-storage.com/";
+const blobBaseAddr = (_a = process.env) === null || _a === void 0 ? void 0 : _a.BLOB_BASE_ADDR;
 const fetchImg = (imgName) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {

@@ -1,7 +1,11 @@
-/pay:
+tags:
+    name: Payment
+    description: Process the order payment
+
+/pay/create-intent:
     post:
-        summary: Checkout after some shopping
-        tags: [Products]
+        summary: Create the payment intent and return client secret
+        tags: [Payment]
         security:
             - bearerAuth: []
         requestBody:
@@ -11,8 +15,6 @@
                     schema:
                         type: object
                         required:
-                            - grandTotal
-                            - paymentAccountInfo
                             - orderItems
                         properties:
                             orderItems:
@@ -37,43 +39,6 @@
                                         productCount: 40
                                         unitCost: 60
                                     minItems: 1
-                            grandTotal:
-                                type: number
-                                format: integer
-                                example: 54000
-                            shippingFee:
-                                type: number
-                                format: integer
-                            discounted:
-                                type: number
-                                format: integer
-                            convienceFee:
-                                type: number
-                                format: integer
-                            paymentAccountInfo:
-                                type: object
-                                required:
-                                    - accountType
-                                    - ID
-                                properties:
-                                    accountType:
-                                        type: string
-                                        enum: [Visa, Master, Amex, PayPal]
-                                    ID:
-                                        type: string
-                                    legalName:
-                                        type: string
-                                    expiry:
-                                        type: string
-                                    cvv:
-                                        type: number
-                                        format: integer
-                                example:
-                                    accountType: Visa
-                                    ID: 5464 4646 45646 466
-                                    legalName: SaadUllah
-                                    expiry: 07/27
-                                    cvv: 1234
         responses:
             "401":
                 content:
@@ -87,7 +52,7 @@
                     text/plain:
                         schema:
                             type: string
-                            example: grandTotal (supposed to be in body) is required
+                            example: orderItems (supposed to be in body) is required
             "417":
                 content:
                     application/json:
@@ -111,4 +76,66 @@
                                     example: true
                                 message:
                                     type: string
-                                    example: Transaction ID
+                                    example: Client Secret
+
+/pay/finalize:
+    post:
+        summary: Finalize the payment
+        tags: [Payment]
+        security:
+            - bearerAuth: []
+        requestBody:
+            required: true
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        required:
+                            - capture
+                            - intent_id
+                        properties:
+                            capture:
+                                type: boolean
+                                description: true for capture and false to cancel
+                                example: true
+                            intent_id:
+                                type: string
+                                example: pi_3Pjkf5RvSZigFhCP1h2c9LVu
+        responses:
+            "401":
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: "Unauthorized"
+            "400":
+                description: Invalid parameters
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: orderItems (supposed to be in body) is required
+            "417":
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: false
+                                message:
+                                    type: string
+                                    example: No such product exists
+            "201":
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: true
+                                message:
+                                    type: string
+                                    example: Client Secret

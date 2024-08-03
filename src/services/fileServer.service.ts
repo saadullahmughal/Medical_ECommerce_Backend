@@ -1,10 +1,9 @@
 import { UploadedFile } from "express-fileupload"
-import fs, { existsSync } from "fs"
 import path from "path"
 import { getDownloadUrl, put } from "@vercel/blob"
 
-const dirBaseAddr = "D:/Devminified/Node/Medical_ECommerce_Backend/images/"
-const blobBaseAddr = "https://l0exfqlkcyslzqlp.public.blob.vercel-storage.com/"
+
+const blobBaseAddr = process.env?.BLOB_BASE_ADDR as string
 
 
 export const fetchImg = async (imgName: string) => {

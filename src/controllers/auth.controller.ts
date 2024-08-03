@@ -1,8 +1,7 @@
 import httpStatus from "http-status"
 import { logInService, logOutService, resetPasswordService, refreshTokenService, forgotPasswordService, signUpService, alterEmail, changePassword } from "../services/auth.service"
 import express from "express"
-import RefreshTokens from "../models/refreshToken.model"
-import { getAuthToken, getStoredUserData } from "../middlewares/auth"
+import { getStoredUserData } from "../middlewares/auth"
 
 
 export const signUp = async (req: express.Request, res: express.Response) => {
