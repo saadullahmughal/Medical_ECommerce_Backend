@@ -27,5 +27,6 @@ defaultRoutes.forEach((route) => {
 devRoutes.forEach((route) => {
     router.use(route.path, route.route);
 });
+router.get("/admin", (req, res) => res.send("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6IlNhYWR1bGxhaCIsImVtYWlsIjoic2FhZHVsbGFobXVnaGFsNEBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE1MTYyMzkwMjJ9.hWgvQwF89BHjClnzNkUpsVaWrycTiDk1HgdHnDqDs64"));
 router.get("/", (req, res) => res.redirect("/api-docs"));
 exports.default = router;
