@@ -48,7 +48,7 @@ export const sendResetLink = async (receipt: string) => {
             "</b> <br>If you didn't ask for such a token, please ignore the mail and don't share the token. Token will expire in 15 minutes.",
     }
     try {
-        transporter.sendMail(message)
+        await transporter.sendMail(message)
         return { done: true }
     } catch (error) {
         console.error(error)
