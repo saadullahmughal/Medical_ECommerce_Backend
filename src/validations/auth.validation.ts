@@ -45,9 +45,10 @@ export const forgotPasswordReqBody = Joi.object({
 
 export const resetPasswordReqBody = Joi.object({
     body: Joi.object({
-        token: Joi.string().required(),
+        userName: Joi.string().required(),
+        token: Joi.number().integer().required(),
         password: Joi.string().required(),
-    }).max(2)
+    }).max(3)
 })
 
 

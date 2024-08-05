@@ -22,6 +22,7 @@ const refreshToken_model_1 = __importDefault(require("../models/refreshToken.mod
 const email_service_1 = require("./email.service");
 const form_model_1 = __importDefault(require("../models/form.model"));
 const errorParser_1 = require("../utils/errorParser");
+const resetToken_model_1 = __importDefault(require("../models/resetToken.model"));
 require("dotenv").config();
 const saltRounds = 12;
 const salt = ((_a = process.env) === null || _a === void 0 ? void 0 : _a.BCRYPT_SALT) || "";
@@ -81,7 +82,10 @@ const forgotPasswordService = (reqBody) => __awaiter(void 0, void 0, void 0, fun
             return { done: false, message: "No such user exists" };
         else {
             console.log("Found");
-            const result = yield (0, email_service_1.sendResetLink)(user === null || user === void 0 ? void 0 : user.email);
+            const delResults = yield resetToken_model_1.default.deleteMany({ userID: user.userName });
+            console.log("Deleted:", delResults.deletedCount);
+            const mongoResult = yield resetToken_model_1.default.create({ userID: user === null || user === void 0 ? void 0 : user.userName });
+            const result = yield (0, email_service_1.sendResetLink)(user === null || user === void 0 ? void 0 : user.email, mongoResult.token);
             return { done: true };
         }
     }
@@ -92,14 +96,19 @@ const forgotPasswordService = (reqBody) => __awaiter(void 0, void 0, void 0, fun
 exports.forgotPasswordService = forgotPasswordService;
 const resetPasswordService = (reqBody) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { token, password } = reqBody;
-        if (!(0, token_1.verifyToken)(token))
+        const { userName, token, password } = reqBody;
+        console.log(token);
+        const findResults = yield resetToken_model_1.default.exists({ token: BigInt(token), userID: userName });
+        console.log(findResults);
+        if (!findResults)
             return { done: false, message: "Invalid token" };
-        const payload = (0, token_1.getTokenData)(token);
+        console.log("Found");
         const passHash = (0, exports.genHash)(password);
-        const updateResults = yield user_model_1.default.updateOne({ email: payload === null || payload === void 0 ? void 0 : payload.id }, { $set: { password: passHash } });
-        if (updateResults.matchedCount != 0)
+        const updateResults = yield user_model_1.default.updateOne({ userName: userName }, { $set: { password: passHash } });
+        if (updateResults.matchedCount != 0) {
+            yield resetToken_model_1.default.deleteOne({ token: token });
             return { done: true };
+        }
         else
             return { done: false, message: "Invalid token" };
     }

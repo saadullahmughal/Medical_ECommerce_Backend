@@ -34,22 +34,21 @@ export const verifyConnection = async () => {
     }
 }
 
-export const sendResetLink = async (receipt: string) => {
+export const sendResetLink = async (receipt: string, token: bigint) => {
     if (!verifyConnection()) return false
     let expires = Date.now() + 15 * 60
-    const ResetToken = genToken({ id: receipt }, "15min")
     let message = {
         from: emailTitle + "<" + emailID + ">",
         to: receipt,
         subject: "Password Reset Token",
         html:
             "You can reset your password using the token: <br><b>" +
-            ResetToken +
+            token +
             "</b> <br>If you didn't ask for such a token, please ignore the mail and don't share the token. Token will expire in 15 minutes.",
     }
     try {
         await transporter.sendMail(message)
-        return { done: true }
+        return { done: true };
     } catch (error) {
         console.error(error)
         return { done: false, message: parseMongoError(error) }
