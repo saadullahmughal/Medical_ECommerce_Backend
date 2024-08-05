@@ -15,7 +15,6 @@ var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendResetLink = exports.verifyConnection = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
-const token_1 = require("../utils/token");
 const errorParser_1 = require("../utils/errorParser");
 require("dotenv").config();
 const emailPassword = (_a = process.env) === null || _a === void 0 ? void 0 : _a.EMAIL_PASSWORD;
@@ -46,17 +45,16 @@ const verifyConnection = () => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.verifyConnection = verifyConnection;
-const sendResetLink = (receipt) => __awaiter(void 0, void 0, void 0, function* () {
+const sendResetLink = (receipt, token) => __awaiter(void 0, void 0, void 0, function* () {
     if (!(0, exports.verifyConnection)())
         return false;
     let expires = Date.now() + 15 * 60;
-    const ResetToken = (0, token_1.genToken)({ id: receipt }, "15min");
     let message = {
         from: emailTitle + "<" + emailID + ">",
         to: receipt,
         subject: "Password Reset Token",
         html: "You can reset your password using the token: <br><b>" +
-            ResetToken +
+            token +
             "</b> <br>If you didn't ask for such a token, please ignore the mail and don't share the token. Token will expire in 15 minutes.",
     };
     try {

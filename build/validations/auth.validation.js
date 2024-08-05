@@ -44,9 +44,10 @@ exports.forgotPasswordReqBody = joi_1.default.object({
 });
 exports.resetPasswordReqBody = joi_1.default.object({
     body: joi_1.default.object({
-        token: joi_1.default.string().required(),
+        userName: joi_1.default.string().required(),
+        token: joi_1.default.number().integer().required(),
         password: joi_1.default.string().required(),
-    }).max(2)
+    }).max(3)
 });
 exports.refreshTokenReqBody = joi_1.default.object({
     body: {

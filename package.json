@@ -10,7 +10,8 @@
         "login": "vercel login",
         "build": "tsc",
         "add-build": "git add build",
-        "compile-swagger": "node build/compileSwaggerSpecs.js"
+        "compile-swagger": "node build/compileSwaggerSpecs.js",
+        "dev": "nodemon src/index.ts"
     },
     "pre-commit": [
         "build",
@@ -64,6 +65,7 @@
         "@types/swagger-ui-express": "^4.1.6",
         "commitizen": "^4.3.0",
         "cz-conventional-changelog": "^3.3.0",
+        "nodemon": "^3.1.4",
         "pre-commit": "^1.2.2",
         "rimraf": "^6.0.1"
     },

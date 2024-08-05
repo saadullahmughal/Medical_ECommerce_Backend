@@ -267,8 +267,11 @@ tags:
                         type: object
                         properties:
                             token:
+                                type: number
+                                example: 1924
+                            userName:
                                 type: string
-                                example: 84q98wdhjkshfafoahfa
+                                example: UserName
                             password:
                                 type: string
                                 example: P@$$w0rd

@@ -6,6 +6,7 @@ import RefreshTokens from "../models/refreshToken.model"
 import { sendResetLink } from "./email.service"
 import FormData from "../models/form.model"
 import { parseMongoError } from "../utils/errorParser"
+import resetToken from "../models/resetToken.model"
 require("dotenv").config()
 
 const saltRounds = 12
@@ -69,7 +70,10 @@ export const forgotPasswordService = async (reqBody: Record<string, any>) => {
         if (!user) return { done: false, message: "No such user exists" }
         else {
             console.log("Found")
-            const result = await sendResetLink(user?.email)
+            const delResults = await resetToken.deleteMany({ userID: user.userName })
+            console.log("Deleted:", delResults.deletedCount)
+            const mongoResult = await resetToken.create({ userID: user?.userName })
+            const result = await sendResetLink(user?.email, mongoResult.token)
             return { done: true }
         }
     } catch (error) {
@@ -79,15 +83,21 @@ export const forgotPasswordService = async (reqBody: Record<string, any>) => {
 
 export const resetPasswordService = async (reqBody: Record<string, any>) => {
     try {
-        const { token, password } = reqBody
-        if (!verifyToken(token)) return { done: false, message: "Invalid token" }
-        const payload = getTokenData(token)
+        const { userName, token, password } = reqBody
+        console.log(token)
+        const findResults = await resetToken.exists({ token: BigInt(token), userID: userName })
+        console.log(findResults)
+        if (!findResults) return { done: false, message: "Invalid token" }
+        console.log("Found")
         const passHash = genHash(password)
         const updateResults = await User.updateOne(
-            { email: payload?.id },
-            { $set: { password: passHash } }
+            { userName: userName },
+            { $set: { password: passHash } },
         )
-        if (updateResults.matchedCount != 0) return { done: true }
+        if (updateResults.matchedCount != 0) {
+            await resetToken.deleteOne({ token: token })
+            return { done: true }
+        }
         else return { done: false, message: "Invalid token" }
     } catch (error) {
         return { done: false, reason: parseMongoError(error) }
