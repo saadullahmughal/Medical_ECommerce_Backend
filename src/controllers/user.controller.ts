@@ -27,22 +27,28 @@ export const updateUser = async (req: express.Request, res: express.Response) =>
 }
 
 export const addProfilePic = async (req: express.Request, res: express.Response) => {
-    const userName = getStoredUserData(req)?.userName
-    const image = req.files?.image as UploadedFile
-    let savedName = ""
-    if (!image) res.status(httpStatus.BAD_REQUEST).send("No profile image uploaded")
-    else {
-        const result = await saveImage(image)
-        if (!result) {
-            res.status(httpStatus.EXPECTATION_FAILED).send({ done: false, message: "No valid profile image uploaded" })
-            return
+    try {
+        const userName = getStoredUserData(req)?.userName
+        const image = req.files?.image as UploadedFile
+        let savedName = ""
+        if (!image) res.status(httpStatus.BAD_REQUEST).send("No profile image uploaded")
+        else {
+            const result = await saveImage(image)
+            if (!result) {
+                res.status(httpStatus.EXPECTATION_FAILED).send({ done: false, message: "No valid profile image uploaded" })
+                return
+            }
+            savedName = result.savedName
+            const response = await updateUserData(userName, { image: savedName })
+            if (response.done) {
+                res.status(httpStatus.CREATED).send(response)
+            } else {
+                res.status(httpStatus.EXPECTATION_FAILED).send(response)
+            }
         }
-        savedName = result.savedName
-        const response = await updateUserData(userName, { image: savedName })
-        if (response.done) {
-            res.status(httpStatus.CREATED).send(response)
-        } else {
-            res.status(httpStatus.EXPECTATION_FAILED).send(response)
-        }
+    } catch (error) {
+        console.error(error)
+        res.status(httpStatus.EXPECTATION_FAILED).send(error)
     }
+
 }

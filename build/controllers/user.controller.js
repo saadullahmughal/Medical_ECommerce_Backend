@@ -64,25 +64,31 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 exports.updateUser = updateUser;
 const addProfilePic = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
-    const userName = (_a = (0, auth_1.getStoredUserData)(req)) === null || _a === void 0 ? void 0 : _a.userName;
-    const image = (_b = req.files) === null || _b === void 0 ? void 0 : _b.image;
-    let savedName = "";
-    if (!image)
-        res.status(http_status_1.default.BAD_REQUEST).send("No profile image uploaded");
-    else {
-        const result = yield (0, fileServer_service_1.saveImage)(image);
-        if (!result) {
-            res.status(http_status_1.default.EXPECTATION_FAILED).send({ done: false, message: "No valid profile image uploaded" });
-            return;
-        }
-        savedName = result.savedName;
-        const response = yield (0, user_service_1.updateUserData)(userName, { image: savedName });
-        if (response.done) {
-            res.status(http_status_1.default.CREATED).send(response);
-        }
+    try {
+        const userName = (_a = (0, auth_1.getStoredUserData)(req)) === null || _a === void 0 ? void 0 : _a.userName;
+        const image = (_b = req.files) === null || _b === void 0 ? void 0 : _b.image;
+        let savedName = "";
+        if (!image)
+            res.status(http_status_1.default.BAD_REQUEST).send("No profile image uploaded");
         else {
-            res.status(http_status_1.default.EXPECTATION_FAILED).send(response);
+            const result = yield (0, fileServer_service_1.saveImage)(image);
+            if (!result) {
+                res.status(http_status_1.default.EXPECTATION_FAILED).send({ done: false, message: "No valid profile image uploaded" });
+                return;
+            }
+            savedName = result.savedName;
+            const response = yield (0, user_service_1.updateUserData)(userName, { image: savedName });
+            if (response.done) {
+                res.status(http_status_1.default.CREATED).send(response);
+            }
+            else {
+                res.status(http_status_1.default.EXPECTATION_FAILED).send(response);
+            }
         }
+    }
+    catch (error) {
+        console.error(error);
+        res.status(http_status_1.default.EXPECTATION_FAILED).send(error);
     }
 });
 exports.addProfilePic = addProfilePic;
