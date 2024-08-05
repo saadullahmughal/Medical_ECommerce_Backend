@@ -2,12 +2,13 @@ import Joi from "joi"
 
 export const updateUserReqBody = Joi.object({
     body: Joi.object({
-        password: Joi.forbidden(),
+        password: Joi.string(),
         email: Joi.forbidden(),
+        userName: Joi.forbidden(),
         nic: Joi.string(),
         mobile: Joi.string(),
         gender: Joi.string().valid("Male", "Female", "Other"),
-        image: Joi.string()
+        image: Joi.forbidden()
     }).min(1)
 })
 

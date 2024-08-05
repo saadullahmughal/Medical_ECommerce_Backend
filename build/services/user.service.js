@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateUserData = exports.getUserData = void 0;
 const user_model_1 = __importDefault(require("../models/user.model"));
+const auth_service_1 = require("./auth.service");
 const errorParser_1 = require("../utils/errorParser");
 const getUserData = (userName) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -30,7 +31,8 @@ const getUserData = (userName) => __awaiter(void 0, void 0, void 0, function* ()
 exports.getUserData = getUserData;
 const updateUserData = (userName, userData) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const updated = yield user_model_1.default.updateOne({ userName: userName }, userData);
+        const newRecord = Object.assign(Object.assign({}, userData), { password: (userData === null || userData === void 0 ? void 0 : userData.password) ? (0, auth_service_1.genHash)(userData === null || userData === void 0 ? void 0 : userData.password) : undefined });
+        const updated = yield user_model_1.default.updateOne({ userName: userName }, newRecord);
         if (updated.matchedCount == 0)
             return { done: false, message: "Something went wrong" };
         else

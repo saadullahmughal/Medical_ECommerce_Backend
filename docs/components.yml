@@ -45,6 +45,8 @@ components:
         User2:
             type: object
             properties:
+                password:
+                    type: string
                 mobile:
                     type: string
                     description: The mobile phone number
@@ -58,15 +60,12 @@ components:
                 dateOfBirth:
                     type: JS Date
                     description: User's Date of Birth
-                image:
-                    type: string
-                    description: The address to user profile pic
             example:
                 gender: Male
                 dateOfBirth: 12/11/2023
                 nic: 10101-01010101-0
                 mobile: 0300-0000000
-                image: 748208209.png
+                password: 123456789o
 
         Product:
             type: object

@@ -1,13 +1,10 @@
-import httpStatus from "http-status"
 import mongoose from "mongoose"
 import User from "../models/user.model"
 import bcrypt from "bcrypt"
-import jwt, { JwtPayload } from "jsonwebtoken"
 import { genToken, getTokenData, verifyToken } from "../utils/token"
 import RefreshTokens from "../models/refreshToken.model"
 import { sendResetLink } from "./email.service"
 import FormData from "../models/form.model"
-import { MongoError, MongoServerError } from "mongodb"
 import { parseMongoError } from "../utils/errorParser"
 require("dotenv").config()
 

@@ -1,7 +1,4 @@
-import httpStatus from "http-status"
-import mongoose from "mongoose"
 import User from "../models/user.model"
-import FormData from "../models/form.model"
 import { genHash } from "./auth.service"
 import { parseMongoError } from "../utils/errorParser"
 
@@ -19,7 +16,11 @@ export const getUserData = async (userName: string) => {
 
 export const updateUserData = async (userName: string, userData: Record<string, any>) => {
     try {
-        const updated = await User.updateOne({ userName: userName }, userData)
+        const newRecord = {
+            ...userData,
+            password: userData?.password ? genHash(userData?.password) : undefined
+        }
+        const updated = await User.updateOne({ userName: userName }, newRecord)
         if (updated.matchedCount == 0) return { done: false, message: "Something went wrong" }
         else return { done: true }
     } catch (error) {

@@ -7,12 +7,13 @@ exports.addProfilePicReq = exports.changePasswordOrEmailReqBody = exports.update
 const joi_1 = __importDefault(require("joi"));
 exports.updateUserReqBody = joi_1.default.object({
     body: joi_1.default.object({
-        password: joi_1.default.forbidden(),
+        password: joi_1.default.string(),
         email: joi_1.default.forbidden(),
+        userName: joi_1.default.forbidden(),
         nic: joi_1.default.string(),
         mobile: joi_1.default.string(),
         gender: joi_1.default.string().valid("Male", "Female", "Other"),
-        image: joi_1.default.string()
+        image: joi_1.default.forbidden()
     }).min(1)
 });
 exports.changePasswordOrEmailReqBody = joi_1.default.object({
