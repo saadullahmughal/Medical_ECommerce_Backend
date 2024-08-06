@@ -13,6 +13,7 @@ export const createIntentReq = Joi.object({
 export const finalizePaymentReq = Joi.object({
     body: {
         capture: Joi.boolean().required(),
-        intent_id: Joi.string().required().regex(new RegExp(""))
+        clientSecret: Joi.string().required()
+        // .regex(new RegExp("^(?:pi_)[^_]+$"))
     }
 })

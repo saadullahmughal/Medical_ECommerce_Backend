@@ -12,7 +12,8 @@ export const createIntent = async (req: express.Request, res: express.Response) 
 
 export const finalizePayment = async (req: express.Request, res: express.Response) => {
     const userName = getStoredUserData(req)?.userName
-    const { capture, intent_id } = req.body
+    const { capture, clientSecret } = req.body
+    const intent_id = (clientSecret as string).split("_secret_")[0]
     let response
     if (capture) response = await capturePayment(intent_id)
     else response = await cancelPayment(intent_id)

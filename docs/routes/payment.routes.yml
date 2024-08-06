@@ -2,6 +2,37 @@ tags:
     name: Payment
     description: Process the order payment
 
+/pay/config:
+    get:
+        summary: Get Stripe config info
+        tags: [Payment]
+        security:
+            - bearerAuth: []
+        responses:
+            "401":
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: "Unauthorized"
+            "200":
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                PUBLISH_KEY:
+                                    type: string
+                                    example: 8093risfjsiouffpaodiiap
+            "417":
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                PUBLISH_KEY:
+                                    type: string
+                                    example: N/A
 /pay/create-intent:
     post:
         summary: Create the payment intent and return client secret
@@ -92,15 +123,15 @@ tags:
                         type: object
                         required:
                             - capture
-                            - intent_id
+                            - clientSecret
                         properties:
                             capture:
                                 type: boolean
                                 description: true for capture and false to cancel
                                 example: true
-                            intent_id:
+                            clientSecret:
                                 type: string
-                                example: pi_3Pjkf5RvSZigFhCP1h2c9LVu
+                                example: pi_3Pjkf5RvSZigFhCP1h2c9LVu_jufpajfska
         responses:
             "401":
                 content:

@@ -17,6 +17,7 @@ exports.createIntentReq = joi_1.default.object({
 exports.finalizePaymentReq = joi_1.default.object({
     body: {
         capture: joi_1.default.boolean().required(),
-        intent_id: joi_1.default.string().required().regex(new RegExp(""))
+        clientSecret: joi_1.default.string().required()
+        // .regex(new RegExp("^(?:pi_)[^_]+$"))
     }
 });

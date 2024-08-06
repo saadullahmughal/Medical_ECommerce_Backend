@@ -29,7 +29,8 @@ exports.createIntent = createIntent;
 const finalizePayment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const userName = (_a = (0, auth_1.getStoredUserData)(req)) === null || _a === void 0 ? void 0 : _a.userName;
-    const { capture, intent_id } = req.body;
+    const { capture, clientSecret } = req.body;
+    const intent_id = clientSecret.split("_secret_")[0];
     let response;
     if (capture)
         response = yield (0, payment_service_1.capturePayment)(intent_id);

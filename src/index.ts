@@ -1,7 +1,6 @@
-import mongoose from "mongoose"
+import { config } from "dotenv"
+config()
 import app from "./server"
-import { verifyConnection } from "./services/email.service"
-require("dotenv").config()
 
 const uri = process.env.MONGO_URI as string
 const PORT = process.env.PORT || 5000
