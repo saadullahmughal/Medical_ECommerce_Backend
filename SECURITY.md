@@ -2,8 +2,7 @@
 
 ## Supported Versions
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+Following versions of your project are currently being supported with security updates.
 
 | Version | Supported          |
 | ------- | ------------------ |
@@ -11,6 +10,5 @@ currently being supported with security updates.
 
 ## Reporting a Vulnerability
 
-Use this section to tell people how to report a vulnerability.
-
+To report a vulnerability.
 Email me at saadullahmughal4@gmail.com
