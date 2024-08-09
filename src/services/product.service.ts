@@ -99,7 +99,7 @@ export const getProducts = async (maxNumber: number, filters: Record<string, any
     let onSales = filters?.onSales
     if (onSales != false && !onSales) onSales = true
     let filterQuery: Record<string, any> = { "price": { $gte: 0 } }
-    if (type) filterQuery['productType'] = { $regex: "^(?:vegetables)$", $options: "i" }
+    if (type) filterQuery['productType'] = { $regex: "^(?:" + type + ")$", $options: "i" }
     if (onSales) filterQuery['quantity'] = { $gt: 0 }
     if (newArrivals) filterQuery['createdAt'] = { $gte: new Date(Date.now() - 604800000) }
     if (minPrice) filterQuery['price']['$gte'] = minPrice
