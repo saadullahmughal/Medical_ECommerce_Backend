@@ -106,7 +106,7 @@ const getProducts = (maxNumber, filters) => __awaiter(void 0, void 0, void 0, fu
         onSales = true;
     let filterQuery = { "price": { $gte: 0 } };
     if (type)
-        filterQuery['productType'] = type;
+        filterQuery['productType'] = { $regex: "^(?:" + type + ")$", $options: "i" };
     if (onSales)
         filterQuery['quantity'] = { $gt: 0 };
     if (newArrivals)
