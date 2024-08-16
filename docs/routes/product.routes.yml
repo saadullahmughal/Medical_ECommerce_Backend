@@ -108,6 +108,9 @@ tags:
                                                         type: string
                                                         example: 03 July 2024
                                                         description: Review date
+                                                    userImage:
+                                                        type: string
+                                                        example: profile.jpg
 
                                         reviewCount:
                                             type: number
