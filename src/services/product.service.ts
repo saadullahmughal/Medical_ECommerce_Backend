@@ -5,6 +5,7 @@ import { format } from "date-fns"
 import Order from "../models/order.model"
 import { parseMongoError } from "../utils/errorParser"
 import { truncate } from "fs/promises"
+import User from "../models/user.model"
 
 export const addProductData = async (productInfo: Record<string, any>) => {
     try {
@@ -71,13 +72,20 @@ export const getProductData = async (productTitle: string) => {
             0
         )
         const avgRating = reviewCount != 0 ? totalStars / reviewCount : 0
-        const reviews = queryResults.map((element) => {
+        let images: [String?] = []
+        for (const key in queryResults) {
+            const doc = queryResults[key]
+            const userInfo = await User.findOne({ userName: doc.userName }, { image: true })
+            images.push(userInfo?.image || "")
+        }
+        const reviews = queryResults.map((element, index) => {
             let result: Record<string, any> = {}
             for (const [key, value] of Object.entries(element.toObject())) {
                 if (key != "reviewTime") result[key] = value
                 else result["reviewDate"] = format(element.reviewTime, "dd MMMM yyyy")
             }
-            return result
+            return { ...result, userImage: images[index] }
+            //return { ...result, userImage: images[index].then((userInfo) => userInfo?.image) }
         })
         let finalResult = {
             ...product.toObject(),

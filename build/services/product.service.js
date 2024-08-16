@@ -18,6 +18,7 @@ const review_model_1 = __importDefault(require("../models/review.model"));
 const date_fns_1 = require("date-fns");
 const order_model_1 = __importDefault(require("../models/order.model"));
 const errorParser_1 = require("../utils/errorParser");
+const user_model_1 = __importDefault(require("../models/user.model"));
 const addProductData = (productInfo) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const result = yield product_model_1.default.create(productInfo);
@@ -80,7 +81,13 @@ const getProductData = (productTitle) => __awaiter(void 0, void 0, void 0, funct
         const reviewCount = ratingStats.reduce((total, element, index) => total + element, 0);
         const totalStars = ratingStats.reduce((total, element, index) => total + element * index, 0);
         const avgRating = reviewCount != 0 ? totalStars / reviewCount : 0;
-        const reviews = queryResults.map((element) => {
+        let images = [];
+        for (const key in queryResults) {
+            const doc = queryResults[key];
+            const userInfo = yield user_model_1.default.findOne({ userName: doc.userName }, { image: true });
+            images.push((userInfo === null || userInfo === void 0 ? void 0 : userInfo.image) || "");
+        }
+        const reviews = queryResults.map((element, index) => {
             let result = {};
             for (const [key, value] of Object.entries(element.toObject())) {
                 if (key != "reviewTime")
@@ -88,7 +95,8 @@ const getProductData = (productTitle) => __awaiter(void 0, void 0, void 0, funct
                 else
                     result["reviewDate"] = (0, date_fns_1.format)(element.reviewTime, "dd MMMM yyyy");
             }
-            return result;
+            return Object.assign(Object.assign({}, result), { userImage: images[index] });
+            //return { ...result, userImage: images[index].then((userInfo) => userInfo?.image) }
         });
         let finalResult = Object.assign(Object.assign({}, product.toObject()), { orderCount: orderCount, reviews: reviews, reviewCount: reviewCount, ratingStats: ratingStats, avgRating: avgRating });
         return { done: true, message: finalResult };
