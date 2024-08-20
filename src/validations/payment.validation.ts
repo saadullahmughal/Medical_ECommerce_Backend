@@ -10,6 +10,20 @@ export const createIntentReq = Joi.object({
     }
 })
 
+export const getCartReq = Joi.object({
+    query: Joi.object({
+        cartID: Joi.string().required()
+    }).max(1)
+})
+
+export const addCartReq = Joi.object({
+    body: {
+        item: Joi.string().required(),
+        count: Joi.number().integer().required(),
+        cartID: Joi.string()
+    }
+})
+
 export const finalizePaymentReq = Joi.object({
     body: {
         capture: Joi.boolean().required(),

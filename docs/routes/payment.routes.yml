@@ -33,9 +33,120 @@ tags:
                                 PUBLISH_KEY:
                                     type: string
                                     example: N/A
-/pay/create-intent:
+
+/pay/getClientSecret:
+    get:
+        summary: Get Stripe client secret
+        tags: [Payment]
+        security:
+            - bearerAuth: []
+        parameters:
+            - in: query
+              name: cartID
+              type: string
+              example: f4d654621
+        responses:
+            "401":
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: "Unauthorized"
+            "400":
+                description: Invalid parameters
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: orderItems (supposed to be in body) is required
+            "417":
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: false
+                                message:
+                                    type: string
+                                    example: No such product exists
+            "200":
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: true
+                                message:
+                                    type: string
+                                    example: Client Secret
+/pay/getCart:
+    get:
+        summary: Get Stripe client secret
+        tags: [Payment]
+        security:
+            - bearerAuth: []
+        parameters:
+            - in: query
+              name: cartID
+              type: string
+              example: f4d654621
+        responses:
+            "401":
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: "Unauthorized"
+            "400":
+                description: Invalid parameters
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+                            example: orderItems (supposed to be in body) is required
+            "417":
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: false
+                                message:
+                                    type: string
+                                    example: No such product exists
+            "200":
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                done:
+                                    type: boolean
+                                    example: true
+                                message:
+                                    type: array
+                                    items:
+                                        type: object
+                                        properties:
+                                            item:
+                                                type: string
+                                                example: Organic Carrots
+                                            count:
+                                                type: number
+                                                example: 25
+                                            stock:
+                                                type: number
+                                                example: 400
+
+/pay/addToCart:
     post:
-        summary: Create the payment intent and return client secret
+        summary: Add an item to cart
         tags: [Payment]
         security:
             - bearerAuth: []
@@ -46,30 +157,20 @@ tags:
                     schema:
                         type: object
                         required:
-                            - orderItems
+                            - item
+                            - count
                         properties:
-                            orderItems:
-                                type: array
-                                items:
-                                    type: object
-                                    properties:
-                                        productTitle:
-                                            type: string
-                                        productCount:
-                                            type: number
-                                            format: integer
-                                        unitCost:
-                                            type: number
-                                            format: integer
-                                    required:
-                                        - productTitle
-                                        - productCount
-                                        - unitCost
-                                    example:
-                                        productTitle: Carrots
-                                        productCount: 40
-                                        unitCost: 60
-                                    minItems: 1
+                            item:
+                                type: string
+                                description: Product title
+                                example: Organic Carrots
+                            count:
+                                type: number
+                                example: 5
+                            cartID:
+                                type: string
+                                description: Ignore if creating new cart
+                                example: f4d654621
         responses:
             "401":
                 content:
@@ -106,8 +207,91 @@ tags:
                                     type: boolean
                                     example: true
                                 message:
-                                    type: string
-                                    example: Client Secret
+                                    type: object
+                                    properties:
+                                        overflow:
+                                            type: boolean
+                                            description: Order overflowed stock?
+                                            example: false
+                                        cartID:
+                                            type: string
+                                            example: f4d654621
+
+# /pay/create-intent:
+#     post:
+#         summary: Create the payment intent and return client secret
+#         tags: [Payment]
+#         security:
+#             - bearerAuth: []
+#         requestBody:
+#             required: true
+#             content:
+#                 application/json:
+#                     schema:
+#                         type: object
+#                         required:
+#                             - orderItems
+#                         properties:
+#                             orderItems:
+#                                 type: array
+#                                 items:
+#                                     type: object
+#                                     properties:
+#                                         productTitle:
+#                                             type: string
+#                                         productCount:
+#                                             type: number
+#                                             format: integer
+#                                         unitCost:
+#                                             type: number
+#                                             format: integer
+#                                     required:
+#                                         - productTitle
+#                                         - productCount
+#                                         - unitCost
+#                                     example:
+#                                         productTitle: Carrots
+#                                         productCount: 40
+#                                         unitCost: 60
+#                                     minItems: 1
+#         responses:
+#             "401":
+#                 content:
+#                     text/plain:
+#                         schema:
+#                             type: string
+#                             example: "Unauthorized"
+#             "400":
+#                 description: Invalid parameters
+#                 content:
+#                     text/plain:
+#                         schema:
+#                             type: string
+#                             example: orderItems (supposed to be in body) is required
+#             "417":
+#                 content:
+#                     application/json:
+#                         schema:
+#                             type: object
+#                             properties:
+#                                 done:
+#                                     type: boolean
+#                                     example: false
+#                                 message:
+#                                     type: string
+#                                     example: No such product exists
+#             "201":
+#                 content:
+#                     application/json:
+#                         schema:
+#                             type: object
+#                             properties:
+#                                 done:
+#                                     type: boolean
+#                                     example: true
+#                                 message:
+#                                     type: string
+#                                     example: Client Secret
 
 /pay/finalize:
     post:
