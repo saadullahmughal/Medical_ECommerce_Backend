@@ -53,7 +53,7 @@ export const getProductData = async (productTitle: string) => {
             .select({ _id: 0, productTitle: 0 })
             .exec()
         const orderCount = await Order.countDocuments({
-            "orderItems.productTitle": productTitle,
+            "orderItems.productTitle": productTitle, status: "succeeded"
         })
         const ratingStats = [
             await Review.countDocuments({ productTitle: productTitle, rating: 0 }),

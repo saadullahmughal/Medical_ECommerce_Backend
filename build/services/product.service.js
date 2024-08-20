@@ -68,7 +68,7 @@ const getProductData = (productTitle) => __awaiter(void 0, void 0, void 0, funct
             .select({ _id: 0, productTitle: 0 })
             .exec();
         const orderCount = yield order_model_1.default.countDocuments({
-            "orderItems.productTitle": productTitle,
+            "orderItems.productTitle": productTitle, status: "succeeded"
         });
         const ratingStats = [
             yield review_model_1.default.countDocuments({ productTitle: productTitle, rating: 0 }),
