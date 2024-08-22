@@ -85,7 +85,7 @@ tags:
                                     example: Client Secret
 /pay/getCart:
     get:
-        summary: Get Stripe client secret
+        summary: Get Cart details you saved on server
         tags: [Payment]
         security:
             - bearerAuth: []
@@ -143,6 +143,12 @@ tags:
                                             stock:
                                                 type: number
                                                 example: 400
+                                            price:
+                                                type: number
+                                                example: 250
+                                            defaultImage:
+                                                type: string
+                                                example: image7589r.jpg
 
 /pay/addToCart:
     post:
@@ -166,6 +172,7 @@ tags:
                                 example: Organic Carrots
                             count:
                                 type: number
+                                description: Number of this product you added after last saving to cart
                                 example: 5
                             cartID:
                                 type: string

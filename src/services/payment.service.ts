@@ -40,6 +40,7 @@ export const addToCart = async (itemData: { item: string, count: number, cartID?
         } else {
             const fetchedData = await Order.findById(itemData.cartID)
             if (!fetchedData) throw new Error("Invalid Cart ID")
+            if (fetchedData.status == "succeeded") throw new Error("Invalid Cart ID")
             const matchedItemsInCart = fetchedData.orderItems.filter((item) => {
                 if (item.productTitle == itemData.item) return item
             })
@@ -82,10 +83,10 @@ export const getCart = async (cartID: string, userName: string) => {
         let results = []
         for (const index in cart.orderItems) {
             const itemData = cart.orderItems[index]
-            const fetchedData = await Product.findOne({ title: itemData.productTitle }, { quantity: true })
+            const fetchedData = await Product.findOne({ title: itemData.productTitle })
             if (!fetchedData) throw new Error("Product Catalog changed. Reload the page")
             else {
-                results.push({ item: itemData.productTitle, count: itemData.productCount, stock: fetchedData.quantity, })
+                results.push({ item: itemData.productTitle, count: itemData.productCount, stock: fetchedData.quantity, defaultImage: fetchedData.images[fetchedData.defaultImage] || null, price: fetchedData.price })
             }
         }
         return { done: true, message: results }

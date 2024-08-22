@@ -57,6 +57,8 @@ const addToCart = (itemData, userName) => __awaiter(void 0, void 0, void 0, func
             const fetchedData = yield order_model_1.default.findById(itemData.cartID);
             if (!fetchedData)
                 throw new Error("Invalid Cart ID");
+            if (fetchedData.status == "succeeded")
+                throw new Error("Invalid Cart ID");
             const matchedItemsInCart = fetchedData.orderItems.filter((item) => {
                 if (item.productTitle == itemData.item)
                     return item;
@@ -104,11 +106,11 @@ const getCart = (cartID, userName) => __awaiter(void 0, void 0, void 0, function
         let results = [];
         for (const index in cart.orderItems) {
             const itemData = cart.orderItems[index];
-            const fetchedData = yield product_model_1.default.findOne({ title: itemData.productTitle }, { quantity: true });
+            const fetchedData = yield product_model_1.default.findOne({ title: itemData.productTitle });
             if (!fetchedData)
                 throw new Error("Product Catalog changed. Reload the page");
             else {
-                results.push({ item: itemData.productTitle, count: itemData.productCount, stock: fetchedData.quantity, });
+                results.push({ item: itemData.productTitle, count: itemData.productCount, stock: fetchedData.quantity, defaultImage: fetchedData.images[fetchedData.defaultImage] || null, price: fetchedData.price });
             }
         }
         return { done: true, message: results };
