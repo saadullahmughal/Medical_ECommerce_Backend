@@ -35,7 +35,7 @@ export const addToCart = async (itemData: { item: string, count: number, cartID?
             })
             return {
                 done: true,
-                message: addedResults.id
+                message: { cartID: itemData.cartID, overflow: overflow }
             }
         } else {
             const fetchedData = await Order.findById(itemData.cartID)
