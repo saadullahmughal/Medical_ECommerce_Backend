@@ -50,7 +50,7 @@ const addToCart = (itemData, userName) => __awaiter(void 0, void 0, void 0, func
             });
             return {
                 done: true,
-                message: { cartID: itemData.cartID, overflow: overflow }
+                message: { cartID: addedResults.id, overflow: overflow }
             };
         }
         else {
