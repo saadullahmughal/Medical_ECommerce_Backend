@@ -10,12 +10,25 @@
                     "docs/**"
                 ]
             }
+        },
+        {
+            "src": "dist/index.html",
+            "use": "@vercel/static",
+            "config": {
+                "includeFiles": [
+                    "dist/**"
+                ]
+            }
         }
     ],
     "routes": [
         {
-            "src": "/(.*)",
+            "src": "/api/(.*)",
             "dest": "build/index.js"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "dist/index.html"
         }
     ]
 }
