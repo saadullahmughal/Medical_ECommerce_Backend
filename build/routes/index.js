@@ -22,7 +22,7 @@ const defaultRoutes = [
 ];
 const devRoutes = [{ path: "/api-docs", route: docs_routes_1.default }];
 defaultRoutes.forEach((route) => {
-    router.use(route.path, route.route);
+    router.use(`${route.path}`, route.route);
 });
 devRoutes.forEach((route) => {
     router.use(route.path, route.route);

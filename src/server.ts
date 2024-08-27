@@ -15,7 +15,6 @@ app.use(cors())
 app.use(routes)
 
 
-
 app.use((req, res) => {
     res.status(httpStatus.NOT_FOUND).send("Not Found")
 })
