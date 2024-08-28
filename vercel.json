@@ -7,7 +7,8 @@
             "config": {
                 "includeFiles": [
                     "build/**",
-                    "docs/**"
+                    "docs/**",
+                    "assets/**"
                 ]
             }
         }

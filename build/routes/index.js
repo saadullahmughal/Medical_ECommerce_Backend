@@ -11,7 +11,17 @@ const fileServer_routes_1 = __importDefault(require("./fileServer.routes"));
 const userDataForm_routes_1 = __importDefault(require("./userDataForm.routes"));
 const product_routes_1 = __importDefault(require("./product.routes"));
 const payment_routes_1 = __importDefault(require("./payment.routes"));
+const http_status_1 = __importDefault(require("http-status"));
 let router = express_1.default.Router();
+router.get("/assets/:asset", (req, res) => {
+    var _a;
+    try {
+        res.download(`assets/${(_a = req.params) === null || _a === void 0 ? void 0 : _a.asset}`, (error) => res.sendStatus(http_status_1.default.NOT_FOUND));
+    }
+    catch (error) {
+        res.sendStatus(http_status_1.default.INTERNAL_SERVER_ERROR);
+    }
+});
 const defaultRoutes = [
     { path: "/User", route: user_routes_1.default },
     { path: "/", route: auth_routes_1.default },

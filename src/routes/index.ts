@@ -10,6 +10,16 @@ import httpStatus from "http-status"
 
 let router = express.Router()
 
+router.get("/assets/:asset", (req, res) => {
+    try {
+        res.download(`assets/${req.params?.asset}`, (error) =>
+            res.sendStatus(httpStatus.NOT_FOUND))
+    } catch (error) {
+        res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR)
+    }
+})
+
+
 const defaultRoutes = [
     { path: "/User", route: userRoutes },
     { path: "/", route: authRoutes },
