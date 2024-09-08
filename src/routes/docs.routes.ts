@@ -26,7 +26,7 @@ const swaggerDefinition = {
     servers: [
         {
             description: "Main API Endpoint",
-            url: `https://medical-e-commerce-backend.vercel.app/api/`,
+            url: `https://medical-e-commerce-backend.vercel.app/`,
         },
     ],
 }
