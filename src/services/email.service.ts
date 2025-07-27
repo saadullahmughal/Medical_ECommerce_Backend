@@ -1,58 +1,53 @@
-import nodemailer from "nodemailer"
-import { genToken } from "../utils/token"
-import { parseMongoError } from "../utils/errorParser"
-require("dotenv").config()
+import nodemailer from "nodemailer";
+import { parseMongoError } from "../utils/errorParser";
+import dotenv from "dotenv";
+dotenv.config();
 
-const emailPassword = process.env?.EMAIL_PASSWORD
-const emailID = process.env?.EMAIL_ID
-const emailTitle = process.env?.EMAIL_TITLE
-
+const emailPassword = process.env?.EMAIL_PASSWORD;
+const emailID = process.env?.EMAIL_ID;
+const emailTitle = process.env?.EMAIL_TITLE;
 
 const transporter = nodemailer.createTransport({
-    pool: true,
-    service: "gmail",
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: true,
-    auth: {
-        user: emailID,
-        pass: emailPassword,
-    },
-})
-
+  pool: true,
+  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: true,
+  auth: {
+    user: emailID,
+    pass: emailPassword,
+  },
+});
 
 export const verifyConnection = async () => {
-    try {
-        if (!transporter.isIdle) {
-            const result = await transporter.verify()
-            return result
-        }
-        return true
-    } catch (error) {
-        console.error(error)
-        return false
+  try {
+    if (!transporter.isIdle) {
+      const result = await transporter.verify();
+      return result;
     }
-}
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
 
 export const sendResetLink = async (receipt: string, token: bigint) => {
-    if (!verifyConnection()) return false
-    let expires = Date.now() + 15 * 60
-    let message = {
-        from: emailTitle + "<" + emailID + ">",
-        to: receipt,
-        subject: "Password Reset Token",
-        html:
-            "You can reset your password using the token: <br><b>" +
-            token +
-            "</b> <br>If you didn't ask for such a token, please ignore the mail and don't share the token. Token will expire in 15 minutes.",
-    }
-    try {
-        await transporter.sendMail(message)
-        return { done: true };
-    } catch (error) {
-        console.error(error)
-        return { done: false, message: parseMongoError(error) }
-    }
-}
-
-
+  if (!verifyConnection()) return false;
+  const message = {
+    from: emailTitle + "<" + emailID + ">",
+    to: receipt,
+    subject: "Password Reset Token",
+    html:
+      "You can reset your password using the token: <br><b>" +
+      token +
+      "</b> <br>If you didn't ask for such a token, please ignore the mail and don't share the token. Token will expire in 15 minutes.",
+  };
+  try {
+    await transporter.sendMail(message);
+    return { done: true };
+  } catch (error) {
+    console.error(error);
+    return { done: false, message: parseMongoError(error) };
+  }
+};

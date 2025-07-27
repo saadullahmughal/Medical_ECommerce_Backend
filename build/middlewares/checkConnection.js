@@ -21,11 +21,12 @@ const uri = (_a = process.env) === null || _a === void 0 ? void 0 : _a.MONGO_URI
 let mongoConnection;
 const verifyMongoConnection = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (!mongoConnection || mongoConnection.readyState == mongoose_1.default.STATES.uninitialized)
+        if (!mongoConnection ||
+            mongoConnection.readyState == mongoose_1.default.STATES.uninitialized)
             mongoConnection = (yield mongoose_1.default.connect(uri)).connection;
         return next();
     }
-    catch (error) {
+    catch (_a) {
         res.sendStatus(http_status_1.default.INTERNAL_SERVER_ERROR);
         return;
     }
@@ -39,7 +40,7 @@ const verifyMailerConnection = (req, res, next) => __awaiter(void 0, void 0, voi
         else
             throw new Error();
     }
-    catch (error) {
+    catch (_a) {
         res.sendStatus(http_status_1.default.INTERNAL_SERVER_ERROR);
         return;
     }

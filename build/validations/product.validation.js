@@ -7,7 +7,7 @@ exports.delProductReq = exports.addStockReq = exports.updateProductReq = exports
 const joi_1 = __importDefault(require("joi"));
 exports.getFilteredProductsReq = joi_1.default.object({
     query: {
-        maxNumber: joi_1.default.number().integer().min(1)
+        maxNumber: joi_1.default.number().integer().min(1),
     },
     body: joi_1.default.object({
         searchText: joi_1.default.string(),
@@ -18,14 +18,14 @@ exports.getFilteredProductsReq = joi_1.default.object({
         maxPrice: joi_1.default.number().integer().min(0),
         dietNeeds: joi_1.default.array().items(joi_1.default.string()).min(1),
         allergenFilters: joi_1.default.array().items(joi_1.default.string()).min(1),
-    }).min(1)
+    }).min(1),
 });
 exports.addReviewReq = joi_1.default.object({
     body: {
         productTitle: joi_1.default.string().required(),
         rating: joi_1.default.number().integer().min(0).max(5).required(),
-        reviewText: joi_1.default.string()
-    }
+        reviewText: joi_1.default.string(),
+    },
 });
 exports.addProductReq = joi_1.default.object({
     body: {
@@ -41,10 +41,10 @@ exports.addProductReq = joi_1.default.object({
         amountsPerServing: joi_1.default.array().items(joi_1.default.object({
             item: joi_1.default.string().required(),
             value: joi_1.default.string().required(),
-            valuePercent: joi_1.default.number().min(0).max(100)
+            valuePercent: joi_1.default.number().min(0).max(100),
         })),
         alertMsg: joi_1.default.string(),
-    }
+    },
 });
 exports.updateProductReq = joi_1.default.object({
     body: joi_1.default.object({
@@ -60,19 +60,19 @@ exports.updateProductReq = joi_1.default.object({
         amountsPerServing: joi_1.default.array().items(joi_1.default.object({
             item: joi_1.default.string().required(),
             value: joi_1.default.string().required(),
-            valuePercent: joi_1.default.number().min(0).max(100)
+            valuePercent: joi_1.default.number().min(0).max(100),
         })),
         alertMsg: joi_1.default.string(),
-    }).min(2)
+    }).min(2),
 });
 exports.addStockReq = joi_1.default.object({
     body: {
         title: joi_1.default.string().required(),
-        quantity: joi_1.default.number().integer().min(1).required()
-    }
+        quantity: joi_1.default.number().integer().min(1).required(),
+    },
 });
 exports.delProductReq = joi_1.default.object({
     query: {
-        productName: joi_1.default.string().required()
-    }
+        productName: joi_1.default.string().required(),
+    },
 });

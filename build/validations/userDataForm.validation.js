@@ -17,5 +17,5 @@ exports.submitFormReq = joi_1.default.object({
         indicators: joi_1.default.string(),
         subType: joi_1.default.string(),
         startTime: joi_1.default.string(),
-    }
+    },
 });

@@ -25,12 +25,14 @@ const productSchema = new mongoose_1.default.Schema({
     servingSize: { type: String },
     tags: { type: [String] },
     amountsPerServing: {
-        type: [{
+        type: [
+            {
                 item: { type: String, unique: true, required: true },
                 value: { type: String, required: true },
                 valuePercent: { type: Number },
                 _id: false,
-            }],
+            },
+        ],
     },
     alertMsg: { type: String },
 }, { timestamps: true });

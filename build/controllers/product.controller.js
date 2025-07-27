@@ -20,7 +20,9 @@ const addProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     const productDetails = req.body;
     const response = yield (0, product_service_1.addProductData)(productDetails);
     if (response.done) {
-        res.status(http_status_1.default.CREATED).send(Object.assign(Object.assign({}, response), { message: "Product added" }));
+        res
+            .status(http_status_1.default.CREATED)
+            .send(Object.assign(Object.assign({}, response), { message: "Product added" }));
     }
     else {
         res.status(http_status_1.default.EXPECTATION_FAILED).send(response);
@@ -33,7 +35,9 @@ const updateProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     const newProductDetails = req.body;
     const response = yield (0, product_service_1.updateProductData)(productTitle, newProductDetails);
     if (response.done) {
-        res.status(http_status_1.default.CREATED).send(Object.assign(Object.assign({}, response), { message: "Updated successfully" }));
+        res
+            .status(http_status_1.default.CREATED)
+            .send(Object.assign(Object.assign({}, response), { message: "Updated successfully" }));
     }
     else {
         res.status(http_status_1.default.EXPECTATION_FAILED).send(response);
@@ -56,7 +60,9 @@ const addProductReview = (req, res) => __awaiter(void 0, void 0, void 0, functio
     const userName = (_a = (0, auth_1.getStoredUserData)(req)) === null || _a === void 0 ? void 0 : _a.userName;
     const response = yield (0, product_service_1.addReview)(Object.assign(Object.assign({}, reviewDetails), { userName: userName }));
     if (response.done) {
-        res.status(http_status_1.default.CREATED).send(Object.assign(Object.assign({}, response), { message: "Review Posted" }));
+        res
+            .status(http_status_1.default.CREATED)
+            .send(Object.assign(Object.assign({}, response), { message: "Review Posted" }));
     }
     else {
         res.status(http_status_1.default.EXPECTATION_FAILED).send(response);

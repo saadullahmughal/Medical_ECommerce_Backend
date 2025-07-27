@@ -49,7 +49,9 @@ exports.logOut = logOut;
 const forgotPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const response = yield (0, auth_service_1.forgotPasswordService)(req.body);
     if (response.done) {
-        res.status(http_status_1.default.CREATED).send(Object.assign(Object.assign({}, response), { message: "Mail with reset token sent." }));
+        res
+            .status(http_status_1.default.CREATED)
+            .send(Object.assign(Object.assign({}, response), { message: "Mail with reset token sent." }));
     }
     else {
         res.status(http_status_1.default.EXPECTATION_FAILED).send(response);
@@ -59,7 +61,9 @@ exports.forgotPassword = forgotPassword;
 const resetPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const response = yield (0, auth_service_1.resetPasswordService)(req.body);
     if (response.done) {
-        res.status(http_status_1.default.CREATED).send(Object.assign(Object.assign({}, response), { message: "Password reset." }));
+        res
+            .status(http_status_1.default.CREATED)
+            .send(Object.assign(Object.assign({}, response), { message: "Password reset." }));
     }
     else {
         res.status(http_status_1.default.EXPECTATION_FAILED).send(response);
@@ -67,7 +71,8 @@ const resetPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.resetPassword = resetPassword;
 const refreshToken = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { token } = req === null || req === void 0 ? void 0 : req.body;
+    var _a;
+    const token = (_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.token;
     const response = yield (0, auth_service_1.refreshTokenService)(token);
     if (response.done) {
         res.status(http_status_1.default.OK).send(response);
@@ -92,7 +97,9 @@ const changePasswordOrEmail = (req, res) => __awaiter(void 0, void 0, void 0, fu
         res.status(http_status_1.default.EXPECTATION_FAILED).send(response);
     }
     else {
-        res.status(http_status_1.default.CREATED).send(Object.assign(Object.assign({}, response), { message: "Credentials changed" }));
+        res
+            .status(http_status_1.default.CREATED)
+            .send(Object.assign(Object.assign({}, response), { message: "Credentials changed" }));
     }
 });
 exports.changePasswordOrEmail = changePasswordOrEmail;

@@ -39,18 +39,21 @@ const addToCart = (itemData, userName) => __awaiter(void 0, void 0, void 0, func
                 capture_method: "manual",
             });
             const addedResults = yield order_model_1.default.create({
-                transactionID: intent.id, orderItems: [{
+                transactionID: intent.id,
+                orderItems: [
+                    {
                         productTitle: itemData.item,
                         productCount: itemData.count,
                         unitCost: price,
-                    }],
+                    },
+                ],
                 grandTotal: itemData.count * price,
                 netTotal: itemData.count * price,
                 userName: userName,
             });
             return {
                 done: true,
-                message: { cartID: addedResults.id, overflow: overflow }
+                message: { cartID: addedResults.id, overflow: overflow },
             };
         }
         else {
@@ -74,22 +77,37 @@ const addToCart = (itemData, userName) => __awaiter(void 0, void 0, void 0, func
                             productTitle: itemData.item,
                             productCount: itemData.count,
                             unitCost: price,
-                        }
-                    }
+                        },
+                    },
                 });
             }
             else {
-                if (findResult.quantity < itemData.count + matchedItemsInCart[0].productCount) {
+                if (findResult.quantity <
+                    itemData.count + matchedItemsInCart[0].productCount) {
                     overflow = true;
-                    itemData.count = findResult.quantity - matchedItemsInCart[0].productCount;
+                    itemData.count =
+                        findResult.quantity - matchedItemsInCart[0].productCount;
                 }
-                yield order_model_1.default.updateOne({ _id: new mongodb_1.ObjectId(itemData.cartID), "orderItems.productTitle": itemData.item }, { $inc: { "orderItems.$.productCount": itemData.count } });
+                yield order_model_1.default.updateOne({
+                    _id: new mongodb_1.ObjectId(itemData.cartID),
+                    "orderItems.productTitle": itemData.item,
+                }, { $inc: { "orderItems.$.productCount": itemData.count } });
             }
-            const result = yield order_model_1.default.findByIdAndUpdate(itemData.cartID, { $inc: { grandTotal: price * itemData.count, netTotal: price * itemData.count, } });
+            const result = yield order_model_1.default.findByIdAndUpdate(itemData.cartID, {
+                $inc: {
+                    grandTotal: price * itemData.count,
+                    netTotal: price * itemData.count,
+                },
+            });
             if (!result)
                 throw new Error("Couldn't update");
-            yield stripe.paymentIntents.update(fetchedData.transactionID, { amount: (result === null || result === void 0 ? void 0 : result.netTotal) * 100 });
-            return { done: true, message: { cartID: itemData.cartID, overflow: overflow } };
+            yield stripe.paymentIntents.update(fetchedData.transactionID, {
+                amount: (result === null || result === void 0 ? void 0 : result.netTotal) * 100,
+            });
+            return {
+                done: true,
+                message: { cartID: itemData.cartID, overflow: overflow },
+            };
         }
     }
     catch (error) {
@@ -100,17 +118,28 @@ const addToCart = (itemData, userName) => __awaiter(void 0, void 0, void 0, func
 exports.addToCart = addToCart;
 const getCart = (cartID, userName) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const cart = yield order_model_1.default.findOne({ _id: new mongodb_1.ObjectId(cartID), userName: userName });
+        const cart = yield order_model_1.default.findOne({
+            _id: new mongodb_1.ObjectId(cartID),
+            userName: userName,
+        });
         if (!cart)
             throw new Error("Invalid cart ID");
-        let results = [];
+        const results = [];
         for (const index in cart.orderItems) {
             const itemData = cart.orderItems[index];
-            const fetchedData = yield product_model_1.default.findOne({ title: itemData.productTitle });
+            const fetchedData = yield product_model_1.default.findOne({
+                title: itemData.productTitle,
+            });
             if (!fetchedData)
                 throw new Error("Product Catalog changed. Reload the page");
             else {
-                results.push({ item: itemData.productTitle, count: itemData.productCount, stock: fetchedData.quantity, defaultImage: fetchedData.images[fetchedData.defaultImage] || null, price: fetchedData.price });
+                results.push({
+                    item: itemData.productTitle,
+                    count: itemData.productCount,
+                    stock: fetchedData.quantity,
+                    defaultImage: fetchedData.images[fetchedData.defaultImage] || null,
+                    price: fetchedData.price,
+                });
             }
         }
         return { done: true, message: results };
@@ -130,7 +159,7 @@ const placeOrder = (orderData, userName) => __awaiter(void 0, void 0, void 0, fu
             let sum = 0;
             for (const item of orderItems) {
                 sum += (item === null || item === void 0 ? void 0 : item.productCount) * (item === null || item === void 0 ? void 0 : item.unitCost);
-                const result = yield product_model_1.default.updateOne({ title: item.productTitle, quantity: { $gte: item.productCount } }, { $inc: { quantity: -(item.productCount) } }, { session });
+                const result = yield product_model_1.default.updateOne({ title: item.productTitle, quantity: { $gte: item.productCount } }, { $inc: { quantity: -item.productCount } }, { session });
                 if (result.modifiedCount == 0) {
                     throw new Error("Possibly bad request. Insufficient inventory items");
                 }
@@ -140,13 +169,15 @@ const placeOrder = (orderData, userName) => __awaiter(void 0, void 0, void 0, fu
                 currency: "usd",
                 capture_method: "manual",
             });
-            const result2 = yield order_model_1.default.create([{
+            yield order_model_1.default.create([
+                {
                     transactionID: intent.id,
                     userName: userName,
                     orderItems: orderData === null || orderData === void 0 ? void 0 : orderData.orderItems,
                     grandTotal: sum,
-                    netTotal: sum
-                }], { session });
+                    netTotal: sum,
+                },
+            ], { session });
             yield session.commitTransaction();
             yield session.endSession();
             return { done: true, message: intent.client_secret };
@@ -156,7 +187,10 @@ const placeOrder = (orderData, userName) => __awaiter(void 0, void 0, void 0, fu
         console.error(error);
         yield session.abortTransaction();
         yield session.endSession();
-        return { done: false, message: error.message };
+        return {
+            done: false,
+            message: error.message,
+        };
     }
 });
 exports.placeOrder = placeOrder;
@@ -176,14 +210,14 @@ const getIntentClientSecret = (cartID, userName) => __awaiter(void 0, void 0, vo
 exports.getIntentClientSecret = getIntentClientSecret;
 const capturePayment = (intentID) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const intent = yield stripe.paymentIntents.retrieve(intentID);
+        yield stripe.paymentIntents.retrieve(intentID);
         yield stripe.paymentIntents.capture(intentID);
         const result = yield order_model_1.default.findOneAndUpdate({ transactionID: intentID }, { status: "succeeded" });
         if (!result)
             throw new Error("Invalid transaction");
-        for (const item of result === null || result === void 0 ? void 0 : result.orderItems) {
-            const result = yield product_model_1.default.updateOne({ title: item.productTitle, quantity: { $gte: item.productCount } }, { $inc: { quantity: -(item.productCount) } });
-            if (result.modifiedCount == 0) {
+        for (const item of result.orderItems || []) {
+            const updateResult = yield product_model_1.default.updateOne({ title: item.productTitle, quantity: { $gte: item.productCount } }, { $inc: { quantity: -item.productCount } });
+            if (updateResult.modifiedCount == 0) {
                 throw new Error("Possibly bad request. Insufficient inventory items");
             }
         }
@@ -192,16 +226,19 @@ const capturePayment = (intentID) => __awaiter(void 0, void 0, void 0, function*
     }
     catch (error) {
         console.error(error);
-        return { done: false, message: error.message };
+        return {
+            done: false,
+            message: error.message,
+        };
     }
 });
 exports.capturePayment = capturePayment;
 const cancelPayment = (intentID) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const intent = yield stripe.paymentIntents.retrieve(intentID);
+        yield stripe.paymentIntents.retrieve(intentID);
         yield stripe.paymentIntents.cancel(intentID);
         const order = yield order_model_1.default.findOneAndUpdate({ transactionID: intentID }, { status: "cancelled" });
-        for (const item of order === null || order === void 0 ? void 0 : order.orderItems) {
+        for (const item of (order === null || order === void 0 ? void 0 : order.orderItems) || []) {
             const result = yield product_model_1.default.updateOne({ title: item.productTitle, quantity: { $gte: item.productCount } }, { $inc: { quantity: item.productCount } });
             if (result.modifiedCount == 0) {
                 throw new Error("Something went wrong");
@@ -211,7 +248,10 @@ const cancelPayment = (intentID) => __awaiter(void 0, void 0, void 0, function* 
     }
     catch (error) {
         console.error(error);
-        return { done: false, message: error.message };
+        return {
+            done: false,
+            message: error.message,
+        };
     }
 });
 exports.cancelPayment = cancelPayment;

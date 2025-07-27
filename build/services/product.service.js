@@ -21,7 +21,7 @@ const errorParser_1 = require("../utils/errorParser");
 const user_model_1 = __importDefault(require("../models/user.model"));
 const addProductData = (productInfo) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const result = yield product_model_1.default.create(productInfo);
+        yield product_model_1.default.create(productInfo);
         return { done: true };
     }
     catch (error) {
@@ -47,9 +47,8 @@ const incrementStock = (productTitle, quantity) => __awaiter(void 0, void 0, voi
         const result = yield product_model_1.default.updateOne({ title: productTitle }, { $inc: { quantity: quantity } });
         if ((result === null || result === void 0 ? void 0 : result.matchedCount) == 0)
             return { done: false, message: "No such product exists" };
-        else {
-            done: true;
-        }
+        else
+            return { done: true };
     }
     catch (error) {
         return { done: false, message: (0, errorParser_1.parseMongoError)(error) };
@@ -68,7 +67,8 @@ const getProductData = (productTitle) => __awaiter(void 0, void 0, void 0, funct
             .select({ _id: 0, productTitle: 0 })
             .exec();
         const orderCount = yield order_model_1.default.countDocuments({
-            "orderItems.productTitle": productTitle, status: "succeeded"
+            "orderItems.productTitle": productTitle,
+            status: "succeeded",
         });
         const ratingStats = [
             yield review_model_1.default.countDocuments({ productTitle: productTitle, rating: 0 }),
@@ -78,17 +78,17 @@ const getProductData = (productTitle) => __awaiter(void 0, void 0, void 0, funct
             yield review_model_1.default.countDocuments({ productTitle: productTitle, rating: 4 }),
             yield review_model_1.default.countDocuments({ productTitle: productTitle, rating: 5 }),
         ];
-        const reviewCount = ratingStats.reduce((total, element, index) => total + element, 0);
+        const reviewCount = ratingStats.reduce((total, element) => total + element, 0);
         const totalStars = ratingStats.reduce((total, element, index) => total + element * index, 0);
         const avgRating = reviewCount != 0 ? totalStars / reviewCount : 0;
-        let images = [];
+        const images = [];
         for (const key in queryResults) {
             const doc = queryResults[key];
             const userInfo = yield user_model_1.default.findOne({ userName: doc.userName }, { image: true });
             images.push((userInfo === null || userInfo === void 0 ? void 0 : userInfo.image) || "");
         }
         const reviews = queryResults.map((element, index) => {
-            let result = {};
+            const result = {};
             for (const [key, value] of Object.entries(element.toObject())) {
                 if (key != "reviewTime")
                     result[key] = value;
@@ -98,7 +98,7 @@ const getProductData = (productTitle) => __awaiter(void 0, void 0, void 0, funct
             return Object.assign(Object.assign({}, result), { userImage: images[index] });
             //return { ...result, userImage: images[index].then((userInfo) => userInfo?.image) }
         });
-        let finalResult = Object.assign(Object.assign({}, product.toObject()), { orderCount: orderCount, reviews: reviews, reviewCount: reviewCount, ratingStats: ratingStats, avgRating: avgRating });
+        const finalResult = Object.assign(Object.assign({}, product.toObject()), { orderCount: orderCount, reviews: reviews, reviewCount: reviewCount, ratingStats: ratingStats, avgRating: avgRating });
         return { done: true, message: finalResult };
     }
     catch (error) {
@@ -108,43 +108,68 @@ const getProductData = (productTitle) => __awaiter(void 0, void 0, void 0, funct
 exports.getProductData = getProductData;
 const getProducts = (maxNumber, filters) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    const { searchText, type, newArrivals, minPrice, maxPrice, dietNeeds, allergenFilters } = filters;
+    const { searchText, type, newArrivals, minPrice, maxPrice, dietNeeds, allergenFilters, } = filters;
     let onSales = filters === null || filters === void 0 ? void 0 : filters.onSales;
     if (onSales != false && !onSales)
         onSales = true;
-    let filterQuery = { "price": { $gte: 0 } };
+    const filterQuery = { price: { $gte: 0 } };
     if (type)
-        filterQuery['productType'] = { $regex: "^(?:" + type + ")$", $options: "i" };
+        filterQuery["productType"] = {
+            $regex: "^(?:" + type + ")$",
+            $options: "i",
+        };
     if (onSales)
-        filterQuery['quantity'] = { $gt: 0 };
+        filterQuery["quantity"] = { $gt: 0 };
     if (newArrivals)
-        filterQuery['createdAt'] = { $gte: new Date(Date.now() - 604800000) };
+        filterQuery["createdAt"] = { $gte: new Date(Date.now() - 604800000) };
     if (minPrice)
-        filterQuery['price']['$gte'] = minPrice;
+        filterQuery["price"]["$gte"] = minPrice;
     if (maxPrice)
-        filterQuery['price']['$lte'] = maxPrice;
+        filterQuery["price"]["$lte"] = maxPrice;
     if (dietNeeds)
-        filterQuery['tags'] = { $all: dietNeeds };
+        filterQuery["tags"] = { $all: dietNeeds };
     if (allergenFilters) {
         if (!dietNeeds)
-            filterQuery['tags'] = { $all: allergenFilters };
+            filterQuery["tags"] = { $all: allergenFilters };
         else {
-            const query = [...(_a = filterQuery['tags']) === null || _a === void 0 ? void 0 : _a.$all, ...allergenFilters];
-            filterQuery['tags'] = { $all: query };
+            const existingTags = (_a = filterQuery["tags"]) === null || _a === void 0 ? void 0 : _a.$all;
+            const query = [
+                ...(existingTags || []),
+                ...allergenFilters,
+            ];
+            filterQuery["tags"] = { $all: query };
         }
     }
     console.log(filterQuery);
     if (searchText)
-        filterQuery['title'] = { $regex: "\\b(?:" + searchText + ")", $options: "i" };
+        filterQuery["title"] = {
+            $regex: "\\b(?:" + searchText + ")",
+            $options: "i",
+        };
     console.log(filterQuery);
     try {
-        const results = yield product_model_1.default.find(filterQuery).limit(maxNumber).select({ _id: false, title: true, price: true, images: 1, defaultImage: 1, quantity: 1, description: true, shortTitle: true, unit: true }).exec();
+        const results = yield product_model_1.default.find(filterQuery)
+            .limit(maxNumber)
+            .select({
+            _id: false,
+            title: true,
+            price: true,
+            images: 1,
+            defaultImage: 1,
+            quantity: 1,
+            description: true,
+            shortTitle: true,
+            unit: true,
+        })
+            .exec();
         if (!results)
             return { done: true, message: [] };
         const responses = results.map((doc) => {
             const element = doc.toObject();
             const validImgData = element.images.length > element.defaultImage;
-            return Object.assign(Object.assign({}, element), { defaultImage: validImgData ? element.images[element.defaultImage] : null });
+            return Object.assign(Object.assign({}, element), { defaultImage: validImgData
+                    ? element.images[element.defaultImage]
+                    : null });
         });
         return { done: true, message: responses };
     }

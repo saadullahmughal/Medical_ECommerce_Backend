@@ -1,371 +1,371 @@
 tags:
-    name: Authorization
-    description: User Authorization APIs
+  name: Authorization
+  description: User Authorization APIs
 
 /signUp:
-    post:
-        summary: Signup and create a new user
-        tags: [Authorization]
-        requestBody:
-            required: true
-            content:
-                application/json:
-                    schema:
-                        type: object
-                        required:
-                            - userName
-                            - email
-                            - password
-                        properties:
-                            userName:
-                                type: string
-                                description: Unique username
-                            email:
-                                type: string
-                                description: Unique email
-                            password:
-                                type: string
-                                description: User's password
-                        example:
-                            userName: newUser
-                            email: zafarsaad80@gmail.com
-                            password: "12345678"
-        responses:
-            "400":
-                description: Invalid parameters
-                content:
-                    text/plain:
-                        schema:
-                            type: string
-                            example: userName (supposed to be in body) is required
-            "201":
-                description: User created
-                content:
-                    application/json:
-                        schema:
-                            type: object
-                            properties:
-                                done:
-                                    type: boolean
-                                    example: true
-            "417":
-                description: Failed to create the user
-                content:
-                    application/json:
-                        schema:
-                            type: object
-                            properties:
-                                done:
-                                    type: boolean
-                                    example: false
-                                message:
-                                    type: string
-                                    description: A message indicating reason of failure
-                                    example: This userName already exists
+  post:
+    summary: Signup and create a new user
+    tags: [Authorization]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - userName
+              - email
+              - password
+            properties:
+              userName:
+                type: string
+                description: Unique username
+              email:
+                type: string
+                description: Unique email
+              password:
+                type: string
+                description: User's password
+            example:
+              userName: newUser
+              email: zafarsaad80@gmail.com
+              password: "12345678"
+    responses:
+      "400":
+        description: Invalid parameters
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: userName (supposed to be in body) is required
+      "201":
+        description: User created
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                done:
+                  type: boolean
+                  example: true
+      "417":
+        description: Failed to create the user
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                done:
+                  type: boolean
+                  example: false
+                message:
+                  type: string
+                  description: A message indicating reason of failure
+                  example: This userName already exists
 
 /logIn:
-    post:
-        summary: LogIn to the system
-        tags: [Authorization]
-        requestBody:
-            required: true
-            content:
-                application/json:
-                    schema:
-                        type: object
-                        properties:
-                            userName:
-                                type: string
-                            password:
-                                type: string
-                        required:
-                            - userName
-                            - password
-                        example:
-                            userName: Saadullah
-                            password: P@$$w0rd
+  post:
+    summary: LogIn to the system
+    tags: [Authorization]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              userName:
+                type: string
+              password:
+                type: string
+            required:
+              - userName
+              - password
+            example:
+              userName: Saadullah
+              password: P@$$w0rd
 
-        responses:
-            "200":
-                content:
-                    application/json:
-                        schema:
-                            type: object
-                            properties:
-                                done:
-                                    type: boolean
-                                access:
-                                    type: string
-                                    description: Access token
-                                refresh:
-                                    type: string
-                                    description: Refresh token
-                                userData:
-                                    type: object
-                                    properties:
-                                        userName:
-                                            type: string
-                                        email:
-                                            type: string
-                                        dateOfBirth:
-                                            type: date
-                                        gender:
-                                            type: string
-                                            enum: ["Male", "Female", "Other"]
-                                        mobile:
-                                            type: string
-                                        image:
-                                            type: string
-                                        role:
-                                            type: string
-                                            enum: ["user", "admin"]
-                            example:
-                                done: true
-                                access: Access token
-                                refresh: Refresh token
-                                userData:
-                                    userName: Saadullah
-                                    email: saadullahmughal450@gmail.com
-                                    dateOfBirth: 2004-07-03T12:55:57.392Z
-                                    gender: Male
-                                    mobile: 0317 4278187
-                                    image: 1721033755095-uzxkYXjtCzI7uUsy9HOViNn8FGtDZC.jpg
-                                    role: admin
-            "417":
-                description: Failed to login
-                content:
-                    application/json:
-                        schema:
-                            type: object
-                            properties:
-                                done:
-                                    type: boolean
-                                    example: false
-                                message:
-                                    type: string
-                                    description: A message indicating reason of failure
-                                    example: Invalid credentials
-            "400":
-                description: Invalid parameters
-                content:
-                    text/plain:
-                        schema:
-                            type: string
-                            example: userName (supposed to be in body) is required
+    responses:
+      "200":
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                done:
+                  type: boolean
+                access:
+                  type: string
+                  description: Access token
+                refresh:
+                  type: string
+                  description: Refresh token
+                userData:
+                  type: object
+                  properties:
+                    userName:
+                      type: string
+                    email:
+                      type: string
+                    dateOfBirth:
+                      type: date
+                    gender:
+                      type: string
+                      enum: ["Male", "Female", "Other"]
+                    mobile:
+                      type: string
+                    image:
+                      type: string
+                    role:
+                      type: string
+                      enum: ["user", "admin"]
+              example:
+                done: true
+                access: Access token
+                refresh: Refresh token
+                userData:
+                  userName: Saadullah
+                  email: saadullahmughal450@gmail.com
+                  dateOfBirth: 2004-07-03T12:55:57.392Z
+                  gender: Male
+                  mobile: 0317 4278187
+                  image: 1721033755095-uzxkYXjtCzI7uUsy9HOViNn8FGtDZC.jpg
+                  role: admin
+      "417":
+        description: Failed to login
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                done:
+                  type: boolean
+                  example: false
+                message:
+                  type: string
+                  description: A message indicating reason of failure
+                  example: Invalid credentials
+      "400":
+        description: Invalid parameters
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: userName (supposed to be in body) is required
 /logOut:
-    post:
-        summary: LogOut
-        tags: [Authorization]
-        security:
-            - bearerAuth: []
-        requestBody:
-            required: true
-            content:
-                application/json:
-                    schema:
-                        type: object
-                        properties:
-                            token:
-                                type: string
-                                description: The refresh token
-        responses:
-            "400":
-                description: Invalid parameters
-                content:
-                    text/plain:
-                        schema:
-                            type: string
-                            example: token (supposed to be in body) is required
-            "200":
-                content:
-                    application/json:
-                        schema:
-                            type: object
-                            properties:
-                                done:
-                                    type: boolean
-                            example:
-                                done: true
-            "417":
-                description: Failed to logout
-                content:
-                    application/json:
-                        schema:
-                            type: object
-                            properties:
-                                done:
-                                    type: boolean
-                                    example: false
-                                message:
-                                    type: string
-                                    description: A message indicating reason of failure
-                                    example: Invalid request
-            "401":
-                content:
-                    text/plain:
-                        schema:
-                            type: string
-                            example: "Unauthorized"
+  post:
+    summary: LogOut
+    tags: [Authorization]
+    security:
+      - bearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+                description: The refresh token
+    responses:
+      "400":
+        description: Invalid parameters
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: token (supposed to be in body) is required
+      "200":
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                done:
+                  type: boolean
+              example:
+                done: true
+      "417":
+        description: Failed to logout
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                done:
+                  type: boolean
+                  example: false
+                message:
+                  type: string
+                  description: A message indicating reason of failure
+                  example: Invalid request
+      "401":
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: "Unauthorized"
 /forgotPassword:
-    post:
-        summary: Ask for a reset link if you forgot your password
-        tags: [Authorization]
-        requestBody:
-            required: true
-            content:
-                application/json:
-                    schema:
-                        type: object
-                        properties:
-                            userName:
-                                type: string
-                                example: newUser
-                        required:
-                            - userName
-        responses:
-            "201":
-                content:
-                    application/json:
-                        schema:
-                            type: object
-                            properties:
-                                done:
-                                    type: boolean
-                                    example: true
-                                message:
-                                    type: string
-                                    example: Mail with reset token sent.
-            "417":
-                content:
-                    application/json:
-                        schema:
-                            type: object
-                            properties:
-                                done:
-                                    type: boolean
-                                    example: false
-                                message:
-                                    type: string
-                                    example: No such user exists
-            "400":
-                description: Invalid parameters
-                content:
-                    text/plain:
-                        schema:
-                            type: string
-                            example: userName (supposed to be in body) is required
+  post:
+    summary: Ask for a reset link if you forgot your password
+    tags: [Authorization]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              userName:
+                type: string
+                example: newUser
+            required:
+              - userName
+    responses:
+      "201":
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                done:
+                  type: boolean
+                  example: true
+                message:
+                  type: string
+                  example: Mail with reset token sent.
+      "417":
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                done:
+                  type: boolean
+                  example: false
+                message:
+                  type: string
+                  example: No such user exists
+      "400":
+        description: Invalid parameters
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: userName (supposed to be in body) is required
 
 /resetPassword:
-    post:
-        summary: Reset the password using a requested token received via email
-        tags: [Authorization]
-        requestBody:
-            required: true
-            content:
-                application/json:
-                    schema:
-                        type: object
-                        properties:
-                            token:
-                                type: number
-                                example: 1924
-                            userName:
-                                type: string
-                                example: UserName
-                            password:
-                                type: string
-                                example: P@$$w0rd
-                        required:
-                            - token
-                            - password
-        responses:
-            "201":
-                content:
-                    application/json:
-                        schema:
-                            type: object
-                            properties:
-                                done:
-                                    type: boolean
-                                    example: true
-                                message:
-                                    type: string
-                                    example: Password reset
-            "417":
-                content:
-                    application/json:
-                        schema:
-                            type: object
-                            properties:
-                                done:
-                                    type: boolean
-                                    example: false
-                                message:
-                                    type: string
-                                    example: Invalid token
-            "400":
-                description: Invalid parameters
-                content:
-                    text/plain:
-                        schema:
-                            type: string
-                            example: password (supposed to be in body) is required
+  post:
+    summary: Reset the password using a requested token received via email
+    tags: [Authorization]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              token:
+                type: number
+                example: 1924
+              userName:
+                type: string
+                example: UserName
+              password:
+                type: string
+                example: P@$$w0rd
+            required:
+              - token
+              - password
+    responses:
+      "201":
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                done:
+                  type: boolean
+                  example: true
+                message:
+                  type: string
+                  example: Password reset
+      "417":
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                done:
+                  type: boolean
+                  example: false
+                message:
+                  type: string
+                  example: Invalid token
+      "400":
+        description: Invalid parameters
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: password (supposed to be in body) is required
 /refreshToken:
-    post:
-        summary: Regenerate the access and refresh tokens if access token get expired. Old refresh token will get expired
-        tags: [Authorization]
-        security:
-            - bearerAuth: []
-        requestBody:
-            required: true
-            content:
-                application/json:
-                    schema:
-                        type: object
-                        properties:
-                            token:
-                                type: string
-                                description: Refresh token
-                        required:
-                            - token
-        responses:
-            "200":
-                content:
-                    application/json:
-                        schema:
-                            type: object
-                            properties:
-                                done:
-                                    type: boolean
-                                    example: true
-                                access:
-                                    type: string
-                                    description: Access token
-                                refresh:
-                                    type: string
-                                    description: Refresh token
-                            required:
-                                - access
-                                - refresh
-            "417":
-                content:
-                    application/json:
-                        schema:
-                            type: object
-                            properties:
-                                done:
-                                    type: boolean
-                                    example: false
-                                message:
-                                    type: string
-                                    example: Invalid token
-            "400":
-                description: Invalid parameters
-                content:
-                    text/plain:
-                        schema:
-                            type: string
-                            example: token (supposed to be in body) is required
+  post:
+    summary: Regenerate the access and refresh tokens if access token get expired. Old refresh token will get expired
+    tags: [Authorization]
+    security:
+      - bearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+                description: Refresh token
+            required:
+              - token
+    responses:
+      "200":
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                done:
+                  type: boolean
+                  example: true
+                access:
+                  type: string
+                  description: Access token
+                refresh:
+                  type: string
+                  description: Refresh token
+              required:
+                - access
+                - refresh
+      "417":
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                done:
+                  type: boolean
+                  example: false
+                message:
+                  type: string
+                  example: Invalid token
+      "400":
+        description: Invalid parameters
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: token (supposed to be in body) is required
 # /modifyAuth:
 #     patch:
 #         summary: Update the primary email or email. Both are auth credentials. Try changing request media type to see both schemas

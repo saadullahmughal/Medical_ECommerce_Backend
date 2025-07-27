@@ -21,7 +21,7 @@ const connectMongoose = () => __awaiter(void 0, void 0, void 0, function* () {
         yield mongoose_1.default.connect(uri);
         return true;
     }
-    catch (error) {
+    catch (_a) {
         return false;
     }
 });

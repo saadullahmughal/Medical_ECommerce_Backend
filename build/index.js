@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = require("dotenv");
 (0, dotenv_1.config)();
 const server_1 = __importDefault(require("./server"));
-const uri = process.env.MONGO_URI;
 const PORT = process.env.PORT || 5000;
 function start() {
     return __awaiter(this, void 0, void 0, function* () {

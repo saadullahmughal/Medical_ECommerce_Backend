@@ -1,231 +1,231 @@
 components:
-    securitySchemes:
-        bearerAuth:
-            type: http
-            scheme: bearer
-            bearerFormat: JWT
-            in: header
-    schemas:
-        User:
-            type: object
-            required:
-                - userName
-                - email
-            properties:
-                userName:
-                    type: string
-                    description: Unique username
-                email:
-                    type: string
-                    description: Unique email
-                mobile:
-                    type: string
-                    description: The mobile phone number
-                nic:
-                    type: string
-                    description: National ID Card number
-                gender:
-                    type: string
-                    enum: ["Male", "Female", "Other"]
-                    description: Gender of the user
-                dateOfBirth:
-                    type: JS Date
-                    description: User's Date of Birth
-                image:
-                    type: string
-                    description: The address to user profile pic
-            example:
-                userName: Saadullah
-                email: saadullahmughal4@gmail.com
-                gender: Male
-                dateOfBirth: 12/11/2023
-                nic: 10101-01010101-0
-                mobile: 0300-0000000
-                image: 748208209.png
-        User2:
-            type: object
-            properties:
-                password:
-                    type: string
-                mobile:
-                    type: string
-                    description: The mobile phone number
-                nic:
-                    type: string
-                    description: National ID Card number
-                gender:
-                    type: string
-                    enum: ["Male", "Female", "Other"]
-                    description: Gender of the user
-                dateOfBirth:
-                    type: JS Date
-                    description: User's Date of Birth
-            example:
-                gender: Male
-                dateOfBirth: 12/11/2023
-                nic: 10101-01010101-0
-                mobile: 0300-0000000
-                password: 123456789o
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      in: header
+  schemas:
+    User:
+      type: object
+      required:
+        - userName
+        - email
+      properties:
+        userName:
+          type: string
+          description: Unique username
+        email:
+          type: string
+          description: Unique email
+        mobile:
+          type: string
+          description: The mobile phone number
+        nic:
+          type: string
+          description: National ID Card number
+        gender:
+          type: string
+          enum: ["Male", "Female", "Other"]
+          description: Gender of the user
+        dateOfBirth:
+          type: JS Date
+          description: User's Date of Birth
+        image:
+          type: string
+          description: The address to user profile pic
+      example:
+        userName: Saadullah
+        email: saadullahmughal4@gmail.com
+        gender: Male
+        dateOfBirth: 12/11/2023
+        nic: 10101-01010101-0
+        mobile: 0300-0000000
+        image: 748208209.png
+    User2:
+      type: object
+      properties:
+        password:
+          type: string
+        mobile:
+          type: string
+          description: The mobile phone number
+        nic:
+          type: string
+          description: National ID Card number
+        gender:
+          type: string
+          enum: ["Male", "Female", "Other"]
+          description: Gender of the user
+        dateOfBirth:
+          type: JS Date
+          description: User's Date of Birth
+      example:
+        gender: Male
+        dateOfBirth: 12/11/2023
+        nic: 10101-01010101-0
+        mobile: 0300-0000000
+        password: 123456789o
 
-        Product:
+    Product:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Unique Product Title
+        description:
+          type: string
+          description: Some text describing the product
+        price:
+          type: number
+          description: Unit Price of the product
+        productType:
+          type: string
+          description: Type of the product
+        deliveryTime:
+          type: string
+          description: Delivery time of the product
+        images:
+          type: array
+          items:
+            type: buffer
+            description: Image
+        defaultImage:
+          type: number
+          description: 0-based index of the default image in the above array
+        ingredients:
+          type: array
+          items:
+            type: string
+          description: Ingredients
+        servingPerContainer:
+          type: number
+          description: number of Servings per container
+        servingSize:
+          type: string
+          description: Size of a single serving
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags related to the product
+        amountsPerServing:
+          type: array
+          items:
             type: object
             properties:
-                title:
-                    type: string
-                    description: Unique Product Title
-                description:
-                    type: string
-                    description: Some text describing the product
-                price:
-                    type: number
-                    description: Unit Price of the product
-                productType:
-                    type: string
-                    description: Type of the product
-                deliveryTime:
-                    type: string
-                    description: Delivery time of the product
-                images:
-                    type: array
-                    items:
-                        type: buffer
-                        description: Image
-                defaultImage:
-                    type: number
-                    description: 0-based index of the default image in the above array
-                ingredients:
-                    type: array
-                    items:
-                        type: string
-                    description: Ingredients
-                servingPerContainer:
-                    type: number
-                    description: number of Servings per container
-                servingSize:
-                    type: string
-                    description: Size of a single serving
-                tags:
-                    type: array
-                    items:
-                        type: string
-                    description: Tags related to the product
-                amountsPerServing:
-                    type: array
-                    items:
-                        type: object
-                        properties:
-                            item:
-                                type: string
-                                description: Item whoose amount is in discussion
-                            value:
-                                type: string
-                                description: The amount of the item
-                            valuePercent:
-                                type: number
-                                description: Percentage of the item amount out of recommended daily dose of that amount
-                        required:
-                            - item
-                            - value
-                alertMsg:
-                    type: string
-                    description: A message describing some important info like allergy alerts
+              item:
+                type: string
+                description: Item whoose amount is in discussion
+              value:
+                type: string
+                description: The amount of the item
+              valuePercent:
+                type: number
+                description: Percentage of the item amount out of recommended daily dose of that amount
             required:
-                - title
-                - price
-                - images
-                - quantity
-            example:
-                title: Organic Carrots
-                price: 50
-                quantity: 70
-                images:
-                    - 488454894546.png
-                defaultImage: 0
-                productType: Vegetables
-                amountsPerServing:
-                    - item: Calories
-                      value: "40"
-                    - item: "Total Fat"
-                      value: "10g"
-                      valuePercent: 12
-                    - item: "Sodium"
-                      value: "5mg"
-                      valuePercent: 37
-                    - item: "Protein"
-                      value: "2g"
-                      valuePercent: 55
-                    - item: "Iron"
-                      value: "1.7mg"
-                      valuePercent: 23
-                tags:
-                    - Vegtables
-                    - Low Fat
-                    - Organic
-                servingSize: "1/2 cup (120g)"
-                servingsPerContainer: 3.5
-                alertMsg: "Excess amount can cause overloading of vitamin A"
-        ProductSnap:
-            type: object
-            properties:
-                title:
-                    type: string
-                shortTitle:
-                    type: string
-                price:
-                    type: number
-                description:
-                    type: string
-                quantity:
-                    type: number
-                defaultImage:
-                    type: string
-                    description: Address of showcase image
-                unit:
-                    type: string
-            required:
-                - title
-                - price
-                - quantity
-                - defaultImage
-            example:
-                title: Organic Carrots
-                shortTitle: Carrots
-                description: Very organic vegetable
-                price: 50
-                unit: 1kg
-                quantity: 500
-                defaultImage: 4864654654.png
-        Review:
-            type: object
-            properties:
-                userName:
-                    type: string
-                    description: The user posting the review
-                productTitle:
-                    type: string
-                    description: The product being reviewed
-                rating:
-                    type: number
-                    description: The rating (stars) by user out of 5
-                reviewText:
-                    type: string
-                    description: The main body of review
-            required:
-                - userName
-                - productTitle
-                - rating
-                - reviewText
-            example:
-                userName: Anonymous
-                productTitle: Organic Carrots
-                rating: 4
-                reviewText: Very good item
-        fileServerResponse:
-            type: object
-            properties:
-                originalName:
-                    type: string
-                    example: My DP.jpg
-                newName:
-                    type: string
-                    example: 6405465460.jpg
+              - item
+              - value
+        alertMsg:
+          type: string
+          description: A message describing some important info like allergy alerts
+      required:
+        - title
+        - price
+        - images
+        - quantity
+      example:
+        title: Organic Carrots
+        price: 50
+        quantity: 70
+        images:
+          - 488454894546.png
+        defaultImage: 0
+        productType: Vegetables
+        amountsPerServing:
+          - item: Calories
+            value: "40"
+          - item: "Total Fat"
+            value: "10g"
+            valuePercent: 12
+          - item: "Sodium"
+            value: "5mg"
+            valuePercent: 37
+          - item: "Protein"
+            value: "2g"
+            valuePercent: 55
+          - item: "Iron"
+            value: "1.7mg"
+            valuePercent: 23
+        tags:
+          - Vegtables
+          - Low Fat
+          - Organic
+        servingSize: "1/2 cup (120g)"
+        servingsPerContainer: 3.5
+        alertMsg: "Excess amount can cause overloading of vitamin A"
+    ProductSnap:
+      type: object
+      properties:
+        title:
+          type: string
+        shortTitle:
+          type: string
+        price:
+          type: number
+        description:
+          type: string
+        quantity:
+          type: number
+        defaultImage:
+          type: string
+          description: Address of showcase image
+        unit:
+          type: string
+      required:
+        - title
+        - price
+        - quantity
+        - defaultImage
+      example:
+        title: Organic Carrots
+        shortTitle: Carrots
+        description: Very organic vegetable
+        price: 50
+        unit: 1kg
+        quantity: 500
+        defaultImage: 4864654654.png
+    Review:
+      type: object
+      properties:
+        userName:
+          type: string
+          description: The user posting the review
+        productTitle:
+          type: string
+          description: The product being reviewed
+        rating:
+          type: number
+          description: The rating (stars) by user out of 5
+        reviewText:
+          type: string
+          description: The main body of review
+      required:
+        - userName
+        - productTitle
+        - rating
+        - reviewText
+      example:
+        userName: Anonymous
+        productTitle: Organic Carrots
+        rating: 4
+        reviewText: Very good item
+    fileServerResponse:
+      type: object
+      properties:
+        originalName:
+          type: string
+          example: My DP.jpg
+        newName:
+          type: string
+          example: 6405465460.jpg

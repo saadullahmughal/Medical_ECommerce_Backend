@@ -16,7 +16,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendResetLink = exports.verifyConnection = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const errorParser_1 = require("../utils/errorParser");
-require("dotenv").config();
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 const emailPassword = (_a = process.env) === null || _a === void 0 ? void 0 : _a.EMAIL_PASSWORD;
 const emailID = (_b = process.env) === null || _b === void 0 ? void 0 : _b.EMAIL_ID;
 const emailTitle = (_c = process.env) === null || _c === void 0 ? void 0 : _c.EMAIL_TITLE;
@@ -48,8 +49,7 @@ exports.verifyConnection = verifyConnection;
 const sendResetLink = (receipt, token) => __awaiter(void 0, void 0, void 0, function* () {
     if (!(0, exports.verifyConnection)())
         return false;
-    let expires = Date.now() + 15 * 60;
-    let message = {
+    const message = {
         from: emailTitle + "<" + emailID + ">",
         to: receipt,
         subject: "Password Reset Token",

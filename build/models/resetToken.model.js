@@ -9,12 +9,12 @@ const resetTokenSchema = new mongoose_1.default.Schema({
     token: {
         type: BigInt,
         required: true,
-        default: (0, crypto_1.randomInt)(1000, 10000)
+        default: (0, crypto_1.randomInt)(1000, 10000),
     },
     userID: {
         type: String,
-        required: true
-    }
+        required: true,
+    },
 }, { timestamps: true });
 resetTokenSchema.index({ createdAt: 1 }, { expireAfterSeconds: 900 });
 const resetToken = mongoose_1.default.model("resetToken", resetTokenSchema);

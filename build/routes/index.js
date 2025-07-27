@@ -12,13 +12,13 @@ const userDataForm_routes_1 = __importDefault(require("./userDataForm.routes"));
 const product_routes_1 = __importDefault(require("./product.routes"));
 const payment_routes_1 = __importDefault(require("./payment.routes"));
 const http_status_1 = __importDefault(require("http-status"));
-let router = express_1.default.Router();
+const router = express_1.default.Router();
 router.get("/assets/:asset", (req, res) => {
     var _a;
     try {
-        res.download(`assets/${(_a = req.params) === null || _a === void 0 ? void 0 : _a.asset}`, (error) => res.sendStatus(http_status_1.default.NOT_FOUND));
+        res.download(`assets/${(_a = req.params) === null || _a === void 0 ? void 0 : _a.asset}`, () => res.sendStatus(http_status_1.default.NOT_FOUND));
     }
-    catch (error) {
+    catch (_b) {
         res.sendStatus(http_status_1.default.INTERNAL_SERVER_ERROR);
     }
 });
@@ -28,7 +28,7 @@ const defaultRoutes = [
     { path: "/img", route: fileServer_routes_1.default },
     { path: "/form", route: userDataForm_routes_1.default },
     { path: "/product", route: product_routes_1.default },
-    { path: "/pay", route: payment_routes_1.default }
+    { path: "/pay", route: payment_routes_1.default },
 ];
 const devRoutes = [{ path: "/api-docs", route: docs_routes_1.default }];
 defaultRoutes.forEach((route) => {
@@ -37,6 +37,8 @@ defaultRoutes.forEach((route) => {
 devRoutes.forEach((route) => {
     router.use(route.path, route.route);
 });
-router.get("/admin", (req, res) => res.setHeader("Content-Language", "en-US").send("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6IlNhYWR1bGxhaCIsImVtYWlsIjoic2FhZHVsbGFobXVnaGFsNEBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE1MTYyMzkwMjJ9.hWgvQwF89BHjClnzNkUpsVaWrycTiDk1HgdHnDqDs64"));
+router.get("/admin", (req, res) => res
+    .setHeader("Content-Language", "en-US")
+    .send("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6IlNhYWR1bGxhaCIsImVtYWlsIjoic2FhZHVsbGFobXVnaGFsNEBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE1MTYyMzkwMjJ9.hWgvQwF89BHjClnzNkUpsVaWrycTiDk1HgdHnDqDs64"));
 router.get("/", (req, res) => res.redirect("/api-docs"));
 exports.default = router;

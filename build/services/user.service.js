@@ -18,7 +18,9 @@ const auth_service_1 = require("./auth.service");
 const errorParser_1 = require("../utils/errorParser");
 const getUserData = (userName) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const userFound = yield user_model_1.default.findOne({ userName: userName }).select({ password: 0 }).exec();
+        const userFound = yield user_model_1.default.findOne({ userName: userName })
+            .select({ password: 0 })
+            .exec();
         if (!userFound)
             return { done: false, message: "Something went wrong" };
         else
@@ -31,7 +33,9 @@ const getUserData = (userName) => __awaiter(void 0, void 0, void 0, function* ()
 exports.getUserData = getUserData;
 const updateUserData = (userName, userData) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const newRecord = Object.assign(Object.assign({}, userData), { password: (userData === null || userData === void 0 ? void 0 : userData.password) ? (0, auth_service_1.genHash)(userData === null || userData === void 0 ? void 0 : userData.password) : undefined });
+        const newRecord = Object.assign(Object.assign({}, userData), { password: (userData === null || userData === void 0 ? void 0 : userData.password)
+                ? (0, auth_service_1.genHash)(userData === null || userData === void 0 ? void 0 : userData.password)
+                : undefined });
         const updated = yield user_model_1.default.updateOne({ userName: userName }, newRecord);
         if (updated.matchedCount == 0)
             return { done: false, message: "Something went wrong" };

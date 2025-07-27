@@ -15,8 +15,6 @@ const parseMongoServerError = (error) => {
     if (error.code === 11000)
         return parseMongoDuplicateKeyError(error);
 };
-const parseMongoValidationError = (error) => {
-};
 const parseMongoDuplicateKeyError = (error) => {
     const duplicateError = error;
     const keyPattern = duplicateError === null || duplicateError === void 0 ? void 0 : duplicateError["keyPattern"];

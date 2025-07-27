@@ -11,21 +11,21 @@ const encodeCaesar = (plainText) => {
         if (char >= "A" && char <= "Z") {
             char = String.fromCharCode(char.charCodeAt(0) + 3);
             if (char > "Z") {
-                let diff = char.charCodeAt(0) - "Z".charCodeAt(0) - 1;
+                const diff = char.charCodeAt(0) - "Z".charCodeAt(0) - 1;
                 char = String.fromCharCode("A".charCodeAt(0) + diff);
             }
         }
         if (char >= "a" && char <= "z") {
             char = String.fromCharCode(char.charCodeAt(0) + 3);
             if (char > "z") {
-                let diff = char.charCodeAt(0) - "z".charCodeAt(0) - 1;
+                const diff = char.charCodeAt(0) - "z".charCodeAt(0) - 1;
                 char = String.fromCharCode("a".charCodeAt(0) + diff);
             }
         }
         if (char >= "0" && char <= "9") {
             char = String.fromCharCode(char.charCodeAt(0) + 3);
             if (char > "9") {
-                let diff = char.charCodeAt(0) - "9".charCodeAt(0) - 1;
+                const diff = char.charCodeAt(0) - "9".charCodeAt(0) - 1;
                 char = String.fromCharCode("0".charCodeAt(0) + diff);
             }
         }
@@ -45,21 +45,21 @@ const decodeCaesar = (cipherText) => {
         if (char >= "A" && char <= "Z") {
             char = String.fromCharCode(char.charCodeAt(0) - 3);
             if (char < "A") {
-                let diff = "A".charCodeAt(0) - char.charCodeAt(0) - 1;
+                const diff = "A".charCodeAt(0) - char.charCodeAt(0) - 1;
                 char = String.fromCharCode("Z".charCodeAt(0) - diff);
             }
         }
         if (char >= "a" && char <= "z") {
             char = String.fromCharCode(char.charCodeAt(0) - 3);
             if (char < "a") {
-                let diff = "a".charCodeAt(0) - char.charCodeAt(0) - 1;
+                const diff = "a".charCodeAt(0) - char.charCodeAt(0) - 1;
                 char = String.fromCharCode("z".charCodeAt(0) - diff);
             }
         }
         if (char >= "0" && char <= "9") {
             char = String.fromCharCode(char.charCodeAt(0) - 3);
             if (char < "0") {
-                let diff = "0".charCodeAt(0) - char.charCodeAt(0) - 1;
+                const diff = "0".charCodeAt(0) - char.charCodeAt(0) - 1;
                 char = String.fromCharCode("9".charCodeAt(0) - diff);
             }
         }

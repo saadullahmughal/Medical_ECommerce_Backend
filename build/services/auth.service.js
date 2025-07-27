@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _a;
+var _a, _b, _c, _d;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.alterEmail = exports.changePassword = exports.refreshTokenService = exports.resetPasswordService = exports.forgotPasswordService = exports.logOutService = exports.logInService = exports.signUpService = exports.genHash = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
@@ -23,15 +23,21 @@ const email_service_1 = require("./email.service");
 const form_model_1 = __importDefault(require("../models/form.model"));
 const errorParser_1 = require("../utils/errorParser");
 const resetToken_model_1 = __importDefault(require("../models/resetToken.model"));
-require("dotenv").config();
-const saltRounds = 12;
+const ms_1 = __importDefault(require("ms"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 const salt = ((_a = process.env) === null || _a === void 0 ? void 0 : _a.BCRYPT_SALT) || "";
+const accessTokenExpiry = (0, ms_1.default)(((_b = process.env) === null || _b === void 0 ? void 0 : _b.ACCESS_EXPIRY)
+    ? typeof (0, ms_1.default)((_c = process.env) === null || _c === void 0 ? void 0 : _c.ACCESS_EXPIRY) === "number"
+        ? (_d = process.env) === null || _d === void 0 ? void 0 : _d.ACCESS_EXPIRY
+        : "1 hr"
+    : "1 hr");
 const genHash = (text) => bcrypt_1.default.hashSync(text, salt);
 exports.genHash = genHash;
 const signUpService = (reqBody) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let record = Object.assign(Object.assign({}, reqBody), { password: bcrypt_1.default.hashSync(reqBody === null || reqBody === void 0 ? void 0 : reqBody.password, salt) });
-        const result = yield user_model_1.default.create(record);
+        const record = Object.assign(Object.assign({}, reqBody), { password: bcrypt_1.default.hashSync(reqBody === null || reqBody === void 0 ? void 0 : reqBody.password, salt) });
+        yield user_model_1.default.create(record);
         return { done: true };
     }
     catch (error) {
@@ -40,21 +46,32 @@ const signUpService = (reqBody) => __awaiter(void 0, void 0, void 0, function* (
 });
 exports.signUpService = signUpService;
 const logInService = (reqBody) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
+    var _a;
     try {
-        let record = {
+        const record = {
             password: bcrypt_1.default.hashSync(reqBody === null || reqBody === void 0 ? void 0 : reqBody.password, salt),
             userName: reqBody === null || reqBody === void 0 ? void 0 : reqBody.userName,
         };
-        const userFound = yield user_model_1.default.findOne(record, { createdAt: false, updatedAt: false, password: false, _id: false, __v: false });
+        const userFound = yield user_model_1.default.findOne(record, {
+            createdAt: false,
+            updatedAt: false,
+            password: false,
+            _id: false,
+            __v: false,
+        });
         if (!userFound)
             return { done: false, reason: "Invalid credentials" };
         const tokenPayload = Object.assign({}, userFound.toObject());
         //delete tokenPayload["password"]
-        let refreshToken = (0, token_1.genToken)({ uid: tokenPayload === null || tokenPayload === void 0 ? void 0 : tokenPayload.userName }, "300d");
+        const refreshToken = (0, token_1.genToken)({ uid: tokenPayload === null || tokenPayload === void 0 ? void 0 : tokenPayload.userName }, "300d");
         yield refreshToken_model_1.default.create({ token: refreshToken });
-        let token = (_b = (0, token_1.genToken)(tokenPayload, ((_a = process.env) === null || _a === void 0 ? void 0 : _a.ACCESS_EXPIRY) || 3600)) === null || _b === void 0 ? void 0 : _b.toString();
-        return { done: true, userData: tokenPayload, access: token || "", refresh: refreshToken || "" };
+        const token = (_a = (0, token_1.genToken)(tokenPayload, accessTokenExpiry)) === null || _a === void 0 ? void 0 : _a.toString();
+        return {
+            done: true,
+            userData: tokenPayload,
+            access: token || "",
+            refresh: refreshToken || "",
+        };
     }
     catch (error) {
         return { done: false, message: (0, errorParser_1.parseMongoError)(error) };
@@ -85,7 +102,7 @@ const forgotPasswordService = (reqBody) => __awaiter(void 0, void 0, void 0, fun
             const delResults = yield resetToken_model_1.default.deleteMany({ userID: user.userName });
             console.log("Deleted:", delResults.deletedCount);
             const mongoResult = yield resetToken_model_1.default.create({ userID: user === null || user === void 0 ? void 0 : user.userName });
-            const result = yield (0, email_service_1.sendResetLink)(user === null || user === void 0 ? void 0 : user.email, mongoResult.token);
+            yield (0, email_service_1.sendResetLink)(user === null || user === void 0 ? void 0 : user.email, mongoResult.token);
             return { done: true };
         }
     }
@@ -98,7 +115,10 @@ const resetPasswordService = (reqBody) => __awaiter(void 0, void 0, void 0, func
     try {
         const { userName, token, password } = reqBody;
         console.log(token);
-        const findResults = yield resetToken_model_1.default.exists({ token: BigInt(token), userID: userName });
+        const findResults = yield resetToken_model_1.default.exists({
+            token: BigInt(token),
+            userID: userName,
+        });
         console.log(findResults);
         if (!findResults)
             return { done: false, message: "Invalid token" };
@@ -121,19 +141,25 @@ const refreshTokenService = (token) => __awaiter(void 0, void 0, void 0, functio
     try {
         if (!(0, token_1.verifyToken)(token))
             return { done: false, message: "Invalid token" };
-        let tokenPayload = (0, token_1.getTokenData)(token);
+        const tokenPayload = (0, token_1.getTokenData)(token);
         if (!(tokenPayload === null || tokenPayload === void 0 ? void 0 : tokenPayload.uid))
             return { done: false, message: "Invalid token" };
         const tokenFound = yield refreshToken_model_1.default.findOne({ token: token });
         if (!tokenFound)
             return { done: false, message: "Invalid token" };
-        let userName = tokenPayload === null || tokenPayload === void 0 ? void 0 : tokenPayload.uid;
-        const userFound = yield user_model_1.default.findOne({ userName: userName }, { createdAt: false, updatedAt: false, password: false, _id: false, __v: false });
+        const userName = tokenPayload === null || tokenPayload === void 0 ? void 0 : tokenPayload.uid;
+        const userFound = yield user_model_1.default.findOne({ userName: userName }, {
+            createdAt: false,
+            updatedAt: false,
+            password: false,
+            _id: false,
+            __v: false,
+        });
         if (userFound) {
-            let newTokenPayload = Object.assign({}, userFound === null || userFound === void 0 ? void 0 : userFound.toObject());
-            let newRefreshToken = (0, token_1.genToken)({ uid: newTokenPayload === null || newTokenPayload === void 0 ? void 0 : newTokenPayload.userName }, "300d");
+            const newTokenPayload = Object.assign({}, userFound === null || userFound === void 0 ? void 0 : userFound.toObject());
+            const newRefreshToken = (0, token_1.genToken)({ uid: newTokenPayload === null || newTokenPayload === void 0 ? void 0 : newTokenPayload.userName }, "300d");
             yield refreshToken_model_1.default.findOneAndUpdate({ token: token }, { token: newRefreshToken });
-            let newAccessToken = (0, token_1.genToken)(newTokenPayload, process.env.ACCESS_EXPIRY || 3600);
+            const newAccessToken = (0, token_1.genToken)(newTokenPayload, accessTokenExpiry);
             return { done: true, access: newAccessToken, refresh: newRefreshToken };
         }
         else {

@@ -18,5 +18,7 @@ router.get("/getCart", (0, auth_1.auth)(), (0, validate_1.validate)(payment_vali
 router.get("/getClientSecret", (0, auth_1.auth)(), (0, validate_1.validate)(payment_validation_1.getCartReq), checkConnection_1.verifyMongoConnection, payment_controller_1.getMyIntent);
 router.post("/finalize", (0, auth_1.auth)(), (0, validate_1.validate)(payment_validation_1.finalizePaymentReq), checkConnection_1.verifyMongoConnection, payment_controller_1.finalizePayment);
 const publishKey = (_a = process.env) === null || _a === void 0 ? void 0 : _a.STRIPE_PUBLISH_KEY;
-router.get("/config", (0, auth_1.auth)(), (req, res) => res.status(publishKey ? http_status_1.default.OK : http_status_1.default.EXPECTATION_FAILED).send({ PUBLISH_KEY: publishKey || "N/A" }));
+router.get("/config", (0, auth_1.auth)(), (req, res) => res
+    .status(publishKey ? http_status_1.default.OK : http_status_1.default.EXPECTATION_FAILED)
+    .send({ PUBLISH_KEY: publishKey || "N/A" }));
 exports.default = router;

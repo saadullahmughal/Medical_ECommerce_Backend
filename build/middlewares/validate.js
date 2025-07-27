@@ -9,7 +9,9 @@ const http_status_1 = __importDefault(require("http-status"));
 const validate = (schema) => (req, res, next) => {
     try {
         const schemaObject = joi_1.default.compile(schema);
-        const validationResults = schemaObject.validate(req, { allowUnknown: true });
+        const validationResults = schemaObject.validate(req, {
+            allowUnknown: true,
+        });
         if (validationResults.error)
             throw validationResults.error;
         next();

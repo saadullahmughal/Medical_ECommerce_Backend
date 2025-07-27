@@ -18,21 +18,26 @@ const form_model_1 = __importDefault(require("../models/form.model"));
 const user_model_1 = __importDefault(require("../models/user.model"));
 const moment_1 = __importDefault(require("moment"));
 const errorParser_1 = require("../utils/errorParser");
-require("dotenv").config();
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 const submitFormService = (requestQuery) => __awaiter(void 0, void 0, void 0, function* () {
     const session = yield mongoose_1.default.startSession();
     session.startTransaction();
     try {
         const startTime = (requestQuery === null || requestQuery === void 0 ? void 0 : requestQuery["startTime"]) || "0 seconds";
         const timeParts = startTime.split(" ", 2);
-        let startTimeDate = (0, moment_1.default)().subtract(moment_1.default.duration(timeParts[0], timeParts[1])).toDate();
-        let inRecord = Object.assign(Object.assign({}, requestQuery), { startTime: startTimeDate });
-        let result = yield form_model_1.default.create([inRecord], { session });
+        const startTimeDate = (0, moment_1.default)()
+            .subtract(moment_1.default.duration(timeParts[0], timeParts[1]))
+            .toDate();
+        const inRecord = Object.assign(Object.assign({}, requestQuery), { startTime: startTimeDate });
+        const result = yield form_model_1.default.create([inRecord], { session });
         let newResult;
         if (result)
             newResult = yield user_model_1.default.findOneAndUpdate({ email: requestQuery === null || requestQuery === void 0 ? void 0 : requestQuery.email }, {
                 $set: {
-                    dateOfBirth: (0, moment_1.default)().subtract(moment_1.default.duration(requestQuery === null || requestQuery === void 0 ? void 0 : requestQuery.age, "years")).toDate(),
+                    dateOfBirth: (0, moment_1.default)()
+                        .subtract(moment_1.default.duration(requestQuery === null || requestQuery === void 0 ? void 0 : requestQuery.age, "years"))
+                        .toDate(),
                     gender: requestQuery === null || requestQuery === void 0 ? void 0 : requestQuery.gender,
                 },
             }, { session }).exec();
@@ -40,9 +45,10 @@ const submitFormService = (requestQuery) => __awaiter(void 0, void 0, void 0, fu
             yield session.commitTransaction();
             yield session.endSession();
             return {
-                done: true, message: {
+                done: true,
+                message: {
                     userName: newResult === null || newResult === void 0 ? void 0 : newResult.userName,
-                }
+                },
             };
         }
         else {

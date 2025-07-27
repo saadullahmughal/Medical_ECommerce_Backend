@@ -1,29 +1,72 @@
-import { Router } from "express"
+import { Router } from "express";
 import {
-    getProductInfo,
-    addProduct,
-    updateProduct,
-    addProductReview,
-    getProductsS,
-    addStock,
-    delProduct
-} from "../controllers/product.controller"
-import { auth } from "../middlewares/auth"
-import { validate } from "../middlewares/validate"
-import { addProductReq, addReviewReq, addStockReq, delProductReq, getFilteredProductsReq, updateProductReq } from "../validations/product.validation"
-import { verifyMongoConnection } from "../middlewares/checkConnection"
+  getProductInfo,
+  addProduct,
+  updateProduct,
+  addProductReview,
+  getProductsS,
+  addStock,
+  delProduct,
+} from "../controllers/product.controller";
+import { auth } from "../middlewares/auth";
+import { validate } from "../middlewares/validate";
+import {
+  addProductReq,
+  addReviewReq,
+  addStockReq,
+  delProductReq,
+  getFilteredProductsReq,
+  updateProductReq,
+} from "../validations/product.validation";
+import { verifyMongoConnection } from "../middlewares/checkConnection";
 
-const router = Router()
+const router = Router();
 
-router.get("/:productName", auth(), verifyMongoConnection, getProductInfo)
-router.post("/", auth("admin"), validate(addProductReq), verifyMongoConnection, addProduct)
-router.put("/", auth("admin"), validate(updateProductReq), verifyMongoConnection, updateProduct)
-router.post("/review", auth(), validate(addReviewReq), verifyMongoConnection, addProductReview)
-router.post("/get", auth(), validate(getFilteredProductsReq), verifyMongoConnection, getProductsS)
-router.patch("/addStock", auth("admin"), validate(addStockReq), verifyMongoConnection, addStock)
-router.delete("/", auth("admin"), validate(delProductReq), verifyMongoConnection, delProduct)
+router.get("/:productName", auth(), verifyMongoConnection, getProductInfo);
+router.post(
+  "/",
+  auth("admin"),
+  validate(addProductReq),
+  verifyMongoConnection,
+  addProduct,
+);
+router.put(
+  "/",
+  auth("admin"),
+  validate(updateProductReq),
+  verifyMongoConnection,
+  updateProduct,
+);
+router.post(
+  "/review",
+  auth(),
+  validate(addReviewReq),
+  verifyMongoConnection,
+  addProductReview,
+);
+router.post(
+  "/get",
+  auth(),
+  validate(getFilteredProductsReq),
+  verifyMongoConnection,
+  getProductsS,
+);
+router.patch(
+  "/addStock",
+  auth("admin"),
+  validate(addStockReq),
+  verifyMongoConnection,
+  addStock,
+);
+router.delete(
+  "/",
+  auth("admin"),
+  validate(delProductReq),
+  verifyMongoConnection,
+  delProduct,
+);
 
-export default router
+export default router;
 
 /**
  * @swagger

@@ -28,7 +28,9 @@ const fetchImg = (imgName) => __awaiter(void 0, void 0, void 0, function* () {
             const contentType = response.headers.get("content-type");
             const data = Buffer.from(yield response.arrayBuffer());
             return {
-                type: contentType, data: data, url: response.url
+                type: contentType,
+                data: data,
+                url: response.url,
             };
         }
         else
@@ -44,7 +46,11 @@ const saveImage = (image) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (image.mimetype.indexOf("image/") == 0 && !image.truncated) {
             console.log(image.name);
-            const result = yield (0, blob_1.put)(image.name, image.data, { access: "public", token: process.env.IMAGE_BLOB_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN });
+            const result = yield (0, blob_1.put)(image.name, image.data, {
+                access: "public",
+                token: process.env.IMAGE_BLOB_READ_WRITE_TOKEN ||
+                    process.env.BLOB_READ_WRITE_TOKEN,
+            });
             console.log(result);
             return { originalName: image.name, savedName: path_1.default.basename(result.url) };
         }

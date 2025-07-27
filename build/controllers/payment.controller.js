@@ -57,8 +57,6 @@ const getMyIntent = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 });
 exports.getMyIntent = getMyIntent;
 const finalizePayment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    const userName = (_a = (0, auth_1.getStoredUserData)(req)) === null || _a === void 0 ? void 0 : _a.userName;
     const { capture, clientSecret } = req.body;
     const intent_id = clientSecret.split("_secret_")[0];
     let response;
