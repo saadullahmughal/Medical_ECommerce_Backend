@@ -82,7 +82,7 @@ const RAW_RUNTIME_STATE =
           ["stripe", "virtual:0ce9fb7f384474ae613317b82e153a0f5a76894fbc6af903330ecebb08c805f4701744cc6f6621085452a568659b38de793f5ac95720f8a6769d81aae136b210#npm:18.3.0"],\
           ["swagger-jsdoc", "npm:6.2.8"],\
           ["swagger-ui-dist", "npm:5.27.0"],\
-          ["swagger-ui-express", "virtual:0ce9fb7f384474ae613317b82e153a0f5a76894fbc6af903330ecebb08c805f4701744cc6f6621085452a568659b38de793f5ac95720f8a6769d81aae136b210#npm:5.0.1"],\
+          ["swagger-ui-express", "virtual:0ce9fb7f384474ae613317b82e153a0f5a76894fbc6af903330ecebb08c805f4701744cc6f6621085452a568659b38de793f5ac95720f8a6769d81aae136b210#npm:4.6.2"],\
           ["ts-node", "virtual:0ce9fb7f384474ae613317b82e153a0f5a76894fbc6af903330ecebb08c805f4701744cc6f6621085452a568659b38de793f5ac95720f8a6769d81aae136b210#npm:10.9.2"],\
           ["typescript", "patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>::version=5.8.3&hash=5786d5"],\
           ["typescript-eslint", "virtual:0ce9fb7f384474ae613317b82e153a0f5a76894fbc6af903330ecebb08c805f4701744cc6f6621085452a568659b38de793f5ac95720f8a6769d81aae136b210#npm:8.38.0"]\
@@ -5923,7 +5923,7 @@ const RAW_RUNTIME_STATE =
           ["stripe", "virtual:0ce9fb7f384474ae613317b82e153a0f5a76894fbc6af903330ecebb08c805f4701744cc6f6621085452a568659b38de793f5ac95720f8a6769d81aae136b210#npm:18.3.0"],\
           ["swagger-jsdoc", "npm:6.2.8"],\
           ["swagger-ui-dist", "npm:5.27.0"],\
-          ["swagger-ui-express", "virtual:0ce9fb7f384474ae613317b82e153a0f5a76894fbc6af903330ecebb08c805f4701744cc6f6621085452a568659b38de793f5ac95720f8a6769d81aae136b210#npm:5.0.1"],\
+          ["swagger-ui-express", "virtual:0ce9fb7f384474ae613317b82e153a0f5a76894fbc6af903330ecebb08c805f4701744cc6f6621085452a568659b38de793f5ac95720f8a6769d81aae136b210#npm:4.6.2"],\
           ["ts-node", "virtual:0ce9fb7f384474ae613317b82e153a0f5a76894fbc6af903330ecebb08c805f4701744cc6f6621085452a568659b38de793f5ac95720f8a6769d81aae136b210#npm:10.9.2"],\
           ["typescript", "patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>::version=5.8.3&hash=5786d5"],\
           ["typescript-eslint", "virtual:0ce9fb7f384474ae613317b82e153a0f5a76894fbc6af903330ecebb08c805f4701744cc6f6621085452a568659b38de793f5ac95720f8a6769d81aae136b210#npm:8.38.0"]\
@@ -6764,23 +6764,31 @@ const RAW_RUNTIME_STATE =
           ["swagger-ui-dist", "npm:5.27.0"]\
         ],\
         "linkType": "HARD"\
+      }],\
+      ["npm:5.27.1", {\
+        "packageLocation": "../../../C:/Users/Admin/AppData/Local/Yarn/Berry/cache/swagger-ui-dist-npm-5.27.1-78ab0d932a-10c0.zip/node_modules/swagger-ui-dist/",\
+        "packageDependencies": [\
+          ["@scarf/scarf", "npm:1.4.0"],\
+          ["swagger-ui-dist", "npm:5.27.1"]\
+        ],\
+        "linkType": "HARD"\
       }]\
     ]],\
     ["swagger-ui-express", [\
-      ["npm:5.0.1", {\
-        "packageLocation": "../../../C:/Users/Admin/AppData/Local/Yarn/Berry/cache/swagger-ui-express-npm-5.0.1-a36db7d969-10c0.zip/node_modules/swagger-ui-express/",\
+      ["npm:4.6.2", {\
+        "packageLocation": "../../../C:/Users/Admin/AppData/Local/Yarn/Berry/cache/swagger-ui-express-npm-4.6.2-d5646138c6-10c0.zip/node_modules/swagger-ui-express/",\
         "packageDependencies": [\
-          ["swagger-ui-express", "npm:5.0.1"]\
+          ["swagger-ui-express", "npm:4.6.2"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:0ce9fb7f384474ae613317b82e153a0f5a76894fbc6af903330ecebb08c805f4701744cc6f6621085452a568659b38de793f5ac95720f8a6769d81aae136b210#npm:5.0.1", {\
-        "packageLocation": "./.yarn/__virtual__/swagger-ui-express-virtual-1ad3452c74/4/C:/Users/Admin/AppData/Local/Yarn/Berry/cache/swagger-ui-express-npm-5.0.1-a36db7d969-10c0.zip/node_modules/swagger-ui-express/",\
+      ["virtual:0ce9fb7f384474ae613317b82e153a0f5a76894fbc6af903330ecebb08c805f4701744cc6f6621085452a568659b38de793f5ac95720f8a6769d81aae136b210#npm:4.6.2", {\
+        "packageLocation": "./.yarn/__virtual__/swagger-ui-express-virtual-83b401abb4/4/C:/Users/Admin/AppData/Local/Yarn/Berry/cache/swagger-ui-express-npm-4.6.2-d5646138c6-10c0.zip/node_modules/swagger-ui-express/",\
         "packageDependencies": [\
           ["@types/express", "npm:5.0.3"],\
           ["express", "npm:5.1.0"],\
-          ["swagger-ui-dist", "npm:5.27.0"],\
-          ["swagger-ui-express", "virtual:0ce9fb7f384474ae613317b82e153a0f5a76894fbc6af903330ecebb08c805f4701744cc6f6621085452a568659b38de793f5ac95720f8a6769d81aae136b210#npm:5.0.1"]\
+          ["swagger-ui-dist", "npm:5.27.1"],\
+          ["swagger-ui-express", "virtual:0ce9fb7f384474ae613317b82e153a0f5a76894fbc6af903330ecebb08c805f4701744cc6f6621085452a568659b38de793f5ac95720f8a6769d81aae136b210#npm:4.6.2"]\
         ],\
         "packagePeers": [\
           "@types/express",\

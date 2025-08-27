@@ -52,7 +52,7 @@
     "stripe": "^18.3.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-dist": "^5.17.14",
-    "swagger-ui-express": "5.0.1",
+    "swagger-ui-express": "4.6.2",
     "ts-node": "^10.9.2"
   },
   "devDependencies": {
@@ -93,5 +93,5 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "packageManager": "yarn@4.9.2"
+  "packageManager": "yarn@4.9.4"
 }
